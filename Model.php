@@ -21,7 +21,7 @@ class Model extends \CI_Model
     /**
      * Primary key
      *
-     * Defaults to "id", base model tries to find tables primary key.
+     * Defaults to "id".
      *
      * @var string
      */
@@ -52,7 +52,6 @@ class Model extends \CI_Model
         $this->load->helper("inflector");
         $this->table = $table;
         $this->_setTable();
-        $this->_setPrimaryKey();
     }
 
     /**
@@ -63,14 +62,5 @@ class Model extends \CI_Model
         if ($this->table === "") {
             $this->table = plural(preg_replace("/(_m|_model)?$/", "", strtolower(get_class($this))));
         }
-    }
-    
-    /**
-     * Try and retrieve the primary key from the table
-     */
-    protected function _setPrimaryKey()
-    {
-        $this->primaryKey = $this->db->query("SHOW KEYS FROM `{$this->table}` WHERE key_name = 'PRIMARY'")
-            ->row()->Column_name;
     }
 }
