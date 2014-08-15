@@ -26,10 +26,28 @@ class Model extends \CI_Model
      * @var string
      */
     public $primaryKey = "id";
+    /*************
+     * Callbacks *
+     *************/
+    /**
+     * Before init callback
+     *
+     * Called before the base model has initialized, giving you the opportunity
+     * to set the table and primary key name. This callback is already set
+     * because you can not change its value before the base model has already
+     * initialized.
+     *
+     * @var string
+     */
+    public $beforeInit = "beforeInitCallback";
 
     public function __construct($table = "")
     {
         parent::__construct();
+
+        if (method_exists(array($this, $this->beforeInit)) === true) {
+            $this->{$this->beforeInit}();
+        }
 
         $this->load->helper("inflector");
         $this->table = $table;
