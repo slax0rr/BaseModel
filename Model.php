@@ -52,14 +52,6 @@ class Model extends \CI_Model
      */
     public $softDelete = C::DELETEHARD;
     /**
-     * Soft delete table single or separate
-     *
-     * If separate, models table gets suffixed with "_deleted" or whatever
-     * you set the suffix to be in the "deleteTable" property. If single is chosen
-     * Then the deleted item gets serialized and stored in the single delete table.
-     */
-    public $softDeleteTableMode = C::DELETETABLESEPARATE;
-    /**
      * Soft delete column
      *
      * Column name where the soft delete is marked.
@@ -67,18 +59,6 @@ class Model extends \CI_Model
      * @var string
      */
     public $deleteCol = "deleted";
-    /**
-     * Soft delete table suffix
-     *
-     * @var string
-     */
-    public $deleteTable = "_delete";
-    /**
-     * Soft delete single table
-     *
-     * @var string
-     */
-    public $singleDeleteTable = "deleted_items";
     /**
      * Soft delete status column
      *

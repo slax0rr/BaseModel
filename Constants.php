@@ -13,9 +13,5 @@ class Constants
      */
     const DELETEHARD = 100;
     const DELETESOFTMARK = 101;
-    const DELETESOFTTABLE = 102;
-    const DELETESOFTSTATUS = 103;
-
-    const DELETETABLESINGLE = 200;
-    const DELETETABLESEPARATE = 201;
+    const DELETESOFTSTATUS = 102;
 }
