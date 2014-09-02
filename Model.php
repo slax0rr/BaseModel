@@ -12,6 +12,9 @@ use Constants as C;
  */
 class Model extends \CI_Model
 {
+    /******************
+     * Table settings *
+     ******************/
     /**
      * Model table
      *
@@ -20,6 +23,14 @@ class Model extends \CI_Model
      * @var string
      */
     public $table = "";
+    /**
+     * Table prefix
+     *
+     * If your tables are prefixed, you can set that prefix here.
+     *
+     * @var string
+     */
+    public $tablePrefix = "";
     /**
      * Primary key
      *
@@ -95,6 +106,10 @@ class Model extends \CI_Model
      * @var string
      */
     public $beforeInit = "beforeInitCallback";
+
+    /**************
+     * Protecteds *
+     **************/
 
     public function __construct($table = "")
     {
