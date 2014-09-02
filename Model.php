@@ -39,6 +39,15 @@ class Model extends \CI_Model
      * @var string
      */
     public $primaryKey = "id";
+    /**
+     * Select statement columns
+     *
+     * Can be left as asterisk (*), the default, or as an array, containing
+     * all columns that will be selected
+     *
+     * @var mix
+     */
+    public $selectCols = "*";
 
     /***************
      * Soft delete *
@@ -71,6 +80,21 @@ class Model extends \CI_Model
      * @var string
      */
     public $deleteStatus = "deleted";
+    /**
+     * Custom where string
+     *
+     * If a custom where string is used, you can assign binding where parameters
+     * to $whereBinds property.
+     *
+     * @var string
+     */
+    public $where = "";
+    /**
+     * Custom where binds
+     *
+     * @var array
+     */
+    public $whereBinds = array();
 
     /*************
      * Callbacks *
@@ -102,12 +126,6 @@ class Model extends \CI_Model
      * @var array
      */
     protected $_where = array();
-    /**
-     * Custom where string
-     *
-     * @var string
-     */
-    protected $_whereString = "";
 
     /***********
      * Methods *
@@ -136,7 +154,7 @@ class Model extends \CI_Model
         if ($id === 0) {
             $this->getBy();
         } else {
-            $this->getBy($this->primaryKey, $id);
+            $this->getBy(array($this->primaryKey => $id));
         }
     }
 
@@ -146,10 +164,8 @@ class Model extends \CI_Model
      * Input parameters can be column name, column value, which are then
      * added to the queries WHERE statement.
      */
-    public function getBy()
+    public function getBy($where)
     {
-        $where = func_get_args();
-
         // if deletes are not to be ignored, add this to the where statement
         if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
             if ($this->softDelete === C::DELETESOFTMARK) {
@@ -158,6 +174,7 @@ class Model extends \CI_Model
                 $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
             }
         }
+        $this->_where = array_merge($where, $this->_where);
     }
 
     /**********
@@ -170,6 +187,77 @@ class Model extends \CI_Model
     {
         $this->_ignoreSoftDelete = true;
         return $this;
+    }
+
+    /*********************
+     * Protected Methods *
+     *********************/
+    /**
+     * Set the where string, if not set by user, BLACK VOODOO MAGIC
+     */
+    protected function _setWhere()
+    {
+        // if user has set his own where string, use it.
+        if ($this->where !== "") {
+            return $this->where;
+        }
+
+        $where = "";
+        foreach ($this->_where as $col => $value) {
+            if (is_array($value) === true) {
+                $where .= $this->_addWhereGroup($value);
+            } else {
+                $where .= $this->_setWhereValue($col, $value);
+            }
+        }
+
+        return $where;
+    }
+
+    /**
+     * Add a where group to the where string
+     */
+    protected function _addWhereGroup($params)
+    {
+        $where = "(";
+        $link = false;
+        foreach ($params as $col => $value) {
+            if (is_array($value) === true) {
+                $where .= $this->_addWhereGroup($value);
+            } else {
+                $where .= $this->_setWhereValue($col, $value, $link);
+            }
+        }
+        $where .= ")";
+        return $where;
+    }
+
+    /**
+     * Set the where column/value pair
+     */
+    protected function _setWhereValue($columnName, $value, $link = true)
+    {
+        $where = "";
+        // check if we need to use some link between conditions
+        if (strpos($columnName, "OR ") === 0) {
+            $columnName = ltrim($columnName, "OR ");
+            $where .= "OR ";
+        } elseif ($link === true) {
+            $where .= "AND ";
+        }
+        $this->whereBinds[] = $value;
+        if (is_string($value) === true && strpos($value, "(") === false) {
+            $value = "'?'";
+        } else {
+            $value = "?";
+        }
+        $where .= "{$link}";
+        $where .= "{$columnName}";
+        if (strpos($columnName, " ") === false) {
+            $where.= " =";
+        }
+        $where .= " {$value}";
+        return $where;
     }
 
     /**
