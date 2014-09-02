@@ -90,6 +90,24 @@ class Model extends \CI_Model
     /**************
      * Protecteds *
      **************/
+    /**
+     * Ignore soft delete on next query
+     *
+     * @var bool
+     */
+    protected $_ignoreSoftDelete = false;
+    /**
+     * Where array
+     *
+     * @var array
+     */
+    protected $_where = array();
+    /**
+     * Custom where string
+     *
+     * @var string
+     */
+    protected $_whereString = "";
 
     /***********
      * Methods *
@@ -131,6 +149,27 @@ class Model extends \CI_Model
     public function getBy()
     {
         $where = func_get_args();
+
+        // if deletes are not to be ignored, add this to the where statement
+        if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
+            if ($this->softDelete === C::DELETESOFTMARK) {
+                $this->_where[$this->deleteCol] = false;
+            } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
+                $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
+            }
+        }
+    }
+
+    /**********
+     * Scopes *
+     **********/
+    /**
+     * Return deleted items as well on next query.
+     */
+    public function withDeleted()
+    {
+        $this->_ignoreSoftDelete = true;
+        return $this;
     }
 
     /**
