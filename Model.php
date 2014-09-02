@@ -175,6 +175,14 @@ class Model extends \CI_Model
             }
         }
         $this->_where = array_merge($where, $this->_where);
+
+        $where = $this->_setWhere();
+        $cols = $this->selectCols;
+        if (is_array($cols) === true) {
+            $cols = implode(",", $cols);
+        }
+
+        $query = $this->db->query("SELECT {$cols} WHERE {$where}", $this->whereBinds);
     }
 
     /**********
