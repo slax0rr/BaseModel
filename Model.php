@@ -111,6 +111,10 @@ class Model extends \CI_Model
      * Protecteds *
      **************/
 
+    /***********
+     * Methods *
+     ***********/
+
     public function __construct($table = "")
     {
         parent::__construct();
@@ -122,6 +126,31 @@ class Model extends \CI_Model
         $this->load->helper("inflector");
         $this->table = $table;
         $this->_setTable();
+    }
+
+    /**
+     * Get row by Primary Key(ID)
+     *
+     * If ID === 0, all records are returned.
+     */
+    public function get($id = 0)
+    {
+        if ($id === 0) {
+            $this->getBy();
+        } else {
+            $this->getBy($this->primaryKey, $id);
+        }
+    }
+
+    /**
+     * Get row(s)
+     *
+     * Input parameters can be column name, column value, which are then
+     * added to the queries WHERE statement.
+     */
+    public function getBy()
+    {
+        $where = func_get_args();
     }
 
     /**
