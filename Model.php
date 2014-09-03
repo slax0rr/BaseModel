@@ -39,15 +39,6 @@ class Model extends \CI_Model
      * @var string
      */
     public $primaryKey = "id";
-    /**
-     * Select statement columns
-     *
-     * Can be left as asterisk (*), the default, or as an array, containing
-     * all columns that will be selected
-     *
-     * @var mix
-     */
-    public $selectCols = "*";
 
     /***************
      * Soft delete *
@@ -195,7 +186,7 @@ class Model extends \CI_Model
      * Input parameters can be column name, column value, which are then
      * added to the queries WHERE statement.
      */
-    public function getBy($where)
+    public function getBy($where, $cols = "*")
     {
         // if deletes are not to be ignored, add this to the where statement
         if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
@@ -208,7 +199,6 @@ class Model extends \CI_Model
         $this->_where = array_merge($where, $this->_where);
 
         $where = $this->_setWhere();
-        $cols = $this->selectCols;
         if (is_array($cols) === true) {
             $cols = implode(",", $cols);
         }
