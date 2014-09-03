@@ -135,7 +135,7 @@ class Model extends \CI_Model
     {
         parent::__construct();
 
-        if (method_exists(array($this, $this->beforeInit)) === true) {
+        if (method_exists($this, $this->beforeInit) === true) {
             $this->{$this->beforeInit}();
         }
 
