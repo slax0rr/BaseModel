@@ -156,8 +156,8 @@ class Model extends \CI_Model
     {
         // get the instance for construct calls, for some reasons, those aren't working :/
         $ci = get_instance();
-        if (isset(get_instance()->{$param})) {
-            return get_instance()->{$param};
+        if (isset($ci->{$param})) {
+            return $ci->{$param};
         } elseif ($param === "__result") {
             return $this->__result;
         } else {
@@ -209,7 +209,7 @@ class Model extends \CI_Model
         } else {
             $this->__result = $result;
         }
-        return true;
+        return $this;
     }
 
     /**********
