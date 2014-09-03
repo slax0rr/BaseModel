@@ -211,11 +211,13 @@ class Model extends \CI_Model
         }
 
         $where = "";
+        $link = false;
         foreach ($this->_where as $col => $value) {
             if (is_array($value) === true) {
                 $where .= $this->_addWhereGroup($value);
             } else {
-                $where .= $this->_setWhereValue($col, $value);
+                $where .= $this->_setWhereValue($col, $value, $link);
+                $link = true;
             }
         }
 
@@ -234,6 +236,7 @@ class Model extends \CI_Model
                 $where .= $this->_addWhereGroup($value);
             } else {
                 $where .= $this->_setWhereValue($col, $value, $link);
+                $link = true;
             }
         }
         $where .= ")";
@@ -259,12 +262,11 @@ class Model extends \CI_Model
         } else {
             $value = "?";
         }
-        $where .= "{$link}";
         $where .= "{$columnName}";
         if (strpos($columnName, " ") === false) {
             $where.= " =";
         }
-        $where .= " {$value}";
+        $where .= " {$value} ";
         return $where;
     }
 
