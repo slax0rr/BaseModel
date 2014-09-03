@@ -182,7 +182,7 @@ class Model extends \CI_Model
             $cols = implode(",", $cols);
         }
 
-        $query = $this->db->query("SELECT {$cols} WHERE {$where}", $this->whereBinds);
+        $query = $this->db->query("SELECT {$cols} FROM {$this->table} WHERE {$where}", $this->whereBinds);
     }
 
     /**********
