@@ -127,6 +127,16 @@ class Model extends \CI_Model
      */
     protected $_where = array();
 
+    /************
+     * Privates *
+     ************/
+    /**
+     * Results
+     *
+     * @var object
+     */
+    private $__result;
+
     /***********
      * Methods *
      ***********/
@@ -142,6 +152,27 @@ class Model extends \CI_Model
         $this->load->helper("inflector");
         $this->table = $table;
         $this->_setTable();
+    }
+
+    public function __get($param)
+    {
+        if (isset(get_instance()->{$param})) {
+            return get_instance()->{$param};
+        } elseif ($param === "result") {
+            return $this->__result;
+        } else {
+            if (is_array($this->__result) === true) {
+                $results = array();
+                if (isset($this->__result[0]->{$param}) || $this->__result[0]->{$param} === null) {
+                    foreach ($this->__result as $r) {
+                        $results[] = $r->{$param};
+                    }
+                }
+                return $results;
+            } else {
+                return isset($this->__result->{$param}) ? $this->__result->{$param} : null;
+            }
+        }
     }
 
     /**
@@ -183,6 +214,13 @@ class Model extends \CI_Model
         }
 
         $query = $this->db->query("SELECT {$cols} FROM {$this->table} WHERE {$where}", $this->whereBinds);
+        $result = $query->result_object();
+        if (count($result) === 1) {
+            $this->__result = $result[0];
+        } else {
+            $this->__result = $result;
+        }
+        return true;
     }
 
     /**********
