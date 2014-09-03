@@ -1,7 +1,7 @@
 <?php
-namespace SlaxWeb\BaseModel\Model;
+namespace SlaxWeb\BaseModel;
 
-use Constants as C;
+use \SlaxWeb\BaseModel\Constants as C;
 
 /**
  * BaseModel for CodeIgniter
