@@ -145,24 +145,23 @@ class Model extends \CI_Model
         $this->_setTable();
     }
 
+    /**
+     * Get results
+     *
+     * This magic method is used only for retreival of query results. If the param
+     * is __result, the whole result array/object is returned. This works only
+     * if the query returned one row.
+     */
     public function __get($param)
     {
+        // get the instance for construct calls, for some reasons, those aren't working :/
+        $ci = get_instance();
         if (isset(get_instance()->{$param})) {
             return get_instance()->{$param};
-        } elseif ($param === "result") {
+        } elseif ($param === "__result") {
             return $this->__result;
         } else {
-            if (is_array($this->__result) === true) {
-                $results = array();
-                if (isset($this->__result[0]->{$param}) || $this->__result[0]->{$param} === null) {
-                    foreach ($this->__result as $r) {
-                        $results[] = $r->{$param};
-                    }
-                }
-                return $results;
-            } else {
-                return isset($this->__result->{$param}) ? $this->__result->{$param} : null;
-            }
+            return isset($this->__result->{$param}) ? $this->__result->{$param} : null;
         }
     }
 
