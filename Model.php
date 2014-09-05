@@ -1,6 +1,7 @@
 <?php
 namespace SlaxWeb\BaseModel;
 
+use \SlaxWeb\BaseModel\Result;
 use \SlaxWeb\BaseModel\Constants as C;
 
 /**
@@ -118,16 +119,6 @@ class Model extends \CI_Model
      */
     protected $_where = array();
 
-    /************
-     * Privates *
-     ************/
-    /**
-     * Results
-     *
-     * @var object
-     */
-    private $__result;
-
     /***********
      * Methods *
      ***********/
@@ -146,26 +137,6 @@ class Model extends \CI_Model
     }
 
     /**
-     * Get results
-     *
-     * This magic method is used only for retreival of query results. If the param
-     * is __result, the whole result array/object is returned. This works only
-     * if the query returned one row.
-     */
-    public function __get($param)
-    {
-        // get the instance for construct calls, for some reasons, those aren't working :/
-        $ci = get_instance();
-        if (isset($ci->{$param})) {
-            return $ci->{$param};
-        } elseif ($param === "__result") {
-            return $this->__result;
-        } else {
-            return isset($this->__result->{$param}) ? $this->__result->{$param} : null;
-        }
-    }
-
-    /**
      * Get row by Primary Key(ID)
      *
      * If ID === 0, all records are returned.
@@ -173,9 +144,9 @@ class Model extends \CI_Model
     public function get($id = 0)
     {
         if ($id === 0) {
-            $this->getBy();
+            return $this->getBy();
         } else {
-            $this->getBy(array($this->primaryKey => $id));
+            return $this->getBy(array($this->primaryKey => $id));
         }
     }
 
@@ -203,13 +174,8 @@ class Model extends \CI_Model
         }
 
         $query = $this->db->query("SELECT {$cols} FROM {$this->table} WHERE {$where}", $this->whereBinds);
-        $result = $query->result_object();
-        if (count($result) === 1) {
-            $this->__result = $result[0];
-        } else {
-            $this->__result = $result;
-        }
-        return $this;
+
+        return new Result($query->result_object());
     }
 
     /**********
