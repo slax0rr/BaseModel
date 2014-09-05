@@ -161,6 +161,7 @@ class Model extends \CI_Model
     {
         $this->_withDeleted();
 
+        $this->_where = $where;
         $where = $this->_setWhere();
         if (is_array($cols) === true) {
             $cols = implode(",", $cols);
@@ -197,6 +198,7 @@ class Model extends \CI_Model
     public function updateBy(array $updates, $where)
     {
         $this->_withDeleted();
+        $this->_where = $where;
 
         $where = $this->_setWhere();
         $updateString = "";
@@ -237,6 +239,7 @@ class Model extends \CI_Model
     public function deleteBy($where)
     {
         $status = false;
+        $this->_where = $where;
         /**
          * if we are doing a hard delete, check if we maybe have to also
          * delete some old soft deleted rows, and run the delete statement
@@ -247,11 +250,13 @@ class Model extends \CI_Model
 
             $status = $this->db->query("DELETE FROM {$this->table} WHERE {$where}", $this->whereBinds);
         } else {
+            $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
-                // TODO: construct update statement for soft mark
+                $update = array($this->deleteCol => true);
             } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
-                // TODO: construct update statement for soft mark
+                $update = array($this->statusCol => $this->deleteStatus);
             }
+            $status = $this->updateby($update, $where);
         }
 
         return $status;
