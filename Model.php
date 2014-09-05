@@ -172,11 +172,51 @@ class Model extends \CI_Model
     }
 
     /**
+     * Update by primary key
+     *
+     * If ID === 0, all records are updated.
+     */
+    public function update(array $updates, $id = 0)
+    {
+        if ($id === 0) {
+            return $this->updateBy($updates, array());
+        } else {
+            return $this->updateBy($updates, array($this->primaryKey => $id));
+        }
+
+    }
+
+    /**
+     * Update row(s)
+     *
+     * Input parameters can be column name, column value in an array, which are then
+     * added to the queries WHERE statement.
+     * Appart from the where array, there also must be an update array,
+     * keys hold the column names, and values hold the, well, values.
+     */
+    public function updateBy(array $updates, $where)
+    {
+        $this->_withDeleted();
+
+        $where = $this->_setWhere();
+        $updateString = "";
+        foreach ($updates as $col => $value) {
+            $updateString .= "{$col} = ";
+            if (is_string($value) === true) {
+                $value = "'{$value}'";
+            }
+            $updateString .= "{$value}, ";
+        }
+        $updateString = rtrim($updateString, ", ");
+        return $this->db->query("UPDATE {$this->table} SET {$updateString} WHERE {$where}", $this->whereBinds);
+    }
+
+    /**
      * Delete by primary key
      *
-     * If ID === 0, all records are returned.
+     * If ID === 0, all records are deleted.
      */
-    public function delete($id = )
+    public function delete($id = 0)
     {
         if ($id === 0) {
             return $this->deleteBy(array());
@@ -207,7 +247,6 @@ class Model extends \CI_Model
 
             $status = $this->db->query("DELETE FROM {$this->table} WHERE {$where}", $this->whereBinds);
         } else {
-                $this->_setWhere();
             if ($this->softDelete === C::DELETESOFTMARK) {
                 // TODO: construct update statement for soft mark
             } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
