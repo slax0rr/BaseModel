@@ -158,15 +158,7 @@ class Model extends \CI_Model
      */
     public function getBy($where, $cols = "*")
     {
-        // if deletes are not to be ignored, add this to the where statement
-        if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
-            if ($this->softDelete === C::DELETESOFTMARK) {
-                $this->_where[$this->deleteCol] = false;
-            } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
-                $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
-            }
-        }
-        $this->_where = array_merge($where, $this->_where);
+        $this->_withDeleted();
 
         $where = $this->_setWhere();
         if (is_array($cols) === true) {
@@ -193,6 +185,20 @@ class Model extends \CI_Model
     /*********************
      * Protected Methods *
      *********************/
+    /**
+     * Include deleted where statement
+     */
+    protected function _withDeleted()
+    {
+        if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
+            if ($this->softDelete === C::DELETESOFTMARK) {
+                $this->_where[$this->deleteCol] = false;
+            } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
+                $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
+            }
+        }
+        $this->_where = array_merge($where, $this->_where);
+    }
     /**
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
      */
