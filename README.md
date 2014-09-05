@@ -20,7 +20,7 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basemodel": "~0.1"
+    "slaxweb/ci-basemodel": "~0.2"
   }
 }
 ```
