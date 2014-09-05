@@ -180,18 +180,19 @@ class Model extends \CI_Model
     public function insert(array $data)
     {
         $insert = array("cols" => "", "values" => "");
+        $binds = array();
         foreach ($data as $col => $value) {
-            if (is_string($value) === true) {
-                $value = "'{$value}'";
-            }
+            $binds[] = $value;
+            $value = is_string($value) ? "'?'" : "?";
             $insert["cols"] .= "{$col},";
             $insert["values"] .= "{$value},";
         }
         $insert["cols"] = rtrim($insert["cols"], ",");
         $insert["values"] = rtrim($insert["values"], ",");
         return $this->db->query(
-            "INSERT INTO {$this->tablePrefix}{$this->table} ({$insert["cols"]}) VALUES ({$insert["values"]})
-        ");
+            "INSERT INTO {$this->tablePrefix}{$this->table} ({$insert["cols"]}) VALUES ({$insert["values"]})",
+            $binds
+        );
     }
 
     /**
@@ -224,16 +225,16 @@ class Model extends \CI_Model
 
         $where = $this->_setWhere();
         $updateString = "";
+        $binds = array();
         foreach ($data as $col => $value) {
-            $updateString .= "{$col} = ";
-            if (is_string($value) === true) {
-                $value = "'{$value}'";
-            }
-            $updateString .= "{$value}, ";
+            $binds[] = $value;
+            $value = is_string($value) ? "'?'" : "?";
+            $updateString .= "{$col} = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
         return $this->db->query(
-            "UPDATE {$this->tablePrefix}{$this->table} SET {$updateString} WHERE {$where}", $this->whereBinds
+            "UPDATE {$this->tablePrefix}{$this->table} SET {$updateString} WHERE {$where}",
+            array_merge($binds, $this->whereBinds)
         );
     }
 
