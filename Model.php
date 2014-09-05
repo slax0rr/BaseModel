@@ -167,7 +167,9 @@ class Model extends \CI_Model
             $cols = implode(",", $cols);
         }
 
-        $query = $this->db->query("SELECT {$cols} FROM {$this->table} WHERE {$where}", $this->whereBinds);
+        $query = $this->db->query(
+            "SELECT {$cols} FROM {$this->tablePrefix}{$this->table} WHERE {$where}", $this->whereBinds
+        );
 
         return new Result($query->result_object());
     }
@@ -210,7 +212,9 @@ class Model extends \CI_Model
             $updateString .= "{$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
-        return $this->db->query("UPDATE {$this->table} SET {$updateString} WHERE {$where}", $this->whereBinds);
+        return $this->db->query(
+            "UPDATE {$this->tablePrefix}{$this->table} SET {$updateString} WHERE {$where}", $this->whereBinds
+        );
     }
 
     /**
@@ -248,7 +252,9 @@ class Model extends \CI_Model
             $this->_withDeleted();
             $this->_setWhere();
 
-            $status = $this->db->query("DELETE FROM {$this->table} WHERE {$where}", $this->whereBinds);
+            $status = $this->db->query(
+                "DELETE FROM {$this->tablePrefix}{$this->table} WHERE {$where}", $this->whereBinds
+            );
         } else {
             $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
