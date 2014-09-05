@@ -175,16 +175,36 @@ class Model extends \CI_Model
     }
 
     /**
+     * Insert a row
+     */
+    public function insert(array $data)
+    {
+        $insert = array("cols" => "", "values" => "");
+        foreach ($data as $col => $value) {
+            if (is_string($value) === true) {
+                $value = "'{$value}'";
+            }
+            $insert["cols"] .= "{$col},";
+            $insert["values"] .= "{$value},";
+        }
+        $insert["cols"] = rtrim($insert["cols"], ",");
+        $insert["values"] = rtrim($insert["values"], ",");
+        return $this->db->query(
+            "INSERT INTO {$this->tablePrefix}{$this->table} ({$insert["cols"]}) VALUES ({$insert["values"]})
+        ");
+    }
+
+    /**
      * Update by primary key
      *
      * If ID === 0, all records are updated.
      */
-    public function update(array $updates, $id = 0)
+    public function update(array $data, $id = 0)
     {
         if ($id === 0) {
-            return $this->updateBy($updates, array());
+            return $this->updateBy($data, array());
         } else {
-            return $this->updateBy($updates, array($this->primaryKey => $id));
+            return $this->updateBy($data, array($this->primaryKey => $id));
         }
 
     }
@@ -197,14 +217,14 @@ class Model extends \CI_Model
      * Appart from the where array, there also must be an update array,
      * keys hold the column names, and values hold the, well, values.
      */
-    public function updateBy(array $updates, $where)
+    public function updateBy(array $data, $where)
     {
         $this->_withDeleted();
         $this->_where = $where;
 
         $where = $this->_setWhere();
         $updateString = "";
-        foreach ($updates as $col => $value) {
+        foreach ($data as $col => $value) {
             $updateString .= "{$col} = ";
             if (is_string($value) === true) {
                 $value = "'{$value}'";
