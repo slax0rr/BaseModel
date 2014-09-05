@@ -144,7 +144,7 @@ class Model extends \CI_Model
     public function get($id = 0)
     {
         if ($id === 0) {
-            return $this->getBy();
+            return $this->getBy(array());
         } else {
             return $this->getBy(array($this->primaryKey => $id));
         }
