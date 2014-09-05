@@ -153,8 +153,9 @@ class Model extends \CI_Model
     /**
      * Get row(s)
      *
-     * Input parameters can be column name, column value, which are then
-     * added to the queries WHERE statement.
+     * Input parameters can be column name, column value in an array, which are then
+     * added to the queries WHERE statement, and an array of
+     * columns to be selected, or "*" (default) for all columns.
      */
     public function getBy($where, $cols = "*")
     {
@@ -168,6 +169,53 @@ class Model extends \CI_Model
         $query = $this->db->query("SELECT {$cols} FROM {$this->table} WHERE {$where}", $this->whereBinds);
 
         return new Result($query->result_object());
+    }
+
+    /**
+     * Delete by primary key
+     *
+     * If ID === 0, all records are returned.
+     */
+    public function delete($id = )
+    {
+        if ($id === 0) {
+            return $this->deleteBy(array());
+        } else {
+            return $this->deleteBy(array($this->primaryKey => $id));
+        }
+    }
+
+    /**
+     * Delete row(s)
+     *
+     * Input parameters can be column name, column value in an array, which are then
+     * added to the queries WHERE statement, and an array of
+     * columns to be selected, or "*" (default) for all columns.
+     *
+     * If soft delete is used, an update is issued, if not, the row is DELETED!
+     */
+    public function deleteBy($where)
+    {
+        $status = false;
+        /**
+         * if we are doing a hard delete, check if we maybe have to also
+         * delete some old soft deleted rows, and run the delete statement
+         */
+        if ($this->softDelete === C::DELETEHARD) {
+            $this->_withDeleted();
+            $this->_setWhere();
+
+            $status = $this->db->query("DELETE FROM {$this->table} WHERE {$where}", $this->whereBinds);
+        } else {
+                $this->_setWhere();
+            if ($this->softDelete === C::DELETESOFTMARK) {
+                // TODO: construct update statement for soft mark
+            } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
+                // TODO: construct update statement for soft mark
+            }
+        }
+
+        return $status;
     }
 
     /**********
