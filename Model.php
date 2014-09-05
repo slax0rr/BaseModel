@@ -1,7 +1,8 @@
 <?php
-namespace SlaxWeb\BaseModel\Model;
+namespace SlaxWeb\BaseModel;
 
-use Constants as C;
+use \SlaxWeb\BaseModel\Result;
+use \SlaxWeb\BaseModel\Constants as C;
 
 /**
  * BaseModel for CodeIgniter
@@ -39,15 +40,6 @@ class Model extends \CI_Model
      * @var string
      */
     public $primaryKey = "id";
-    /**
-     * Select statement columns
-     *
-     * Can be left as asterisk (*), the default, or as an array, containing
-     * all columns that will be selected
-     *
-     * @var mix
-     */
-    public $selectCols = "*";
 
     /***************
      * Soft delete *
@@ -135,7 +127,7 @@ class Model extends \CI_Model
     {
         parent::__construct();
 
-        if (method_exists(array($this, $this->beforeInit)) === true) {
+        if (method_exists($this, $this->beforeInit) === true) {
             $this->{$this->beforeInit}();
         }
 
@@ -152,37 +144,128 @@ class Model extends \CI_Model
     public function get($id = 0)
     {
         if ($id === 0) {
-            $this->getBy();
+            return $this->getBy(array());
         } else {
-            $this->getBy(array($this->primaryKey => $id));
+            return $this->getBy(array($this->primaryKey => $id));
         }
     }
 
     /**
      * Get row(s)
      *
-     * Input parameters can be column name, column value, which are then
-     * added to the queries WHERE statement.
+     * Input parameters can be column name, column value in an array, which are then
+     * added to the queries WHERE statement, and an array of
+     * columns to be selected, or "*" (default) for all columns.
      */
-    public function getBy($where)
+    public function getBy($where, $cols = "*")
     {
-        // if deletes are not to be ignored, add this to the where statement
-        if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
-            if ($this->softDelete === C::DELETESOFTMARK) {
-                $this->_where[$this->deleteCol] = false;
-            } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
-                $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
-            }
-        }
-        $this->_where = array_merge($where, $this->_where);
+        $this->_withDeleted();
 
+        $this->_where = $where;
         $where = $this->_setWhere();
-        $cols = $this->selectCols;
         if (is_array($cols) === true) {
             $cols = implode(",", $cols);
         }
 
-        $query = $this->db->query("SELECT {$cols} WHERE {$where}", $this->whereBinds);
+        $query = $this->db->query(
+            "SELECT {$cols} FROM {$this->tablePrefix}{$this->table} WHERE {$where}", $this->whereBinds
+        );
+
+        return new Result($query->result_object());
+    }
+
+    /**
+     * Update by primary key
+     *
+     * If ID === 0, all records are updated.
+     */
+    public function update(array $updates, $id = 0)
+    {
+        if ($id === 0) {
+            return $this->updateBy($updates, array());
+        } else {
+            return $this->updateBy($updates, array($this->primaryKey => $id));
+        }
+
+    }
+
+    /**
+     * Update row(s)
+     *
+     * Input parameters can be column name, column value in an array, which are then
+     * added to the queries WHERE statement.
+     * Appart from the where array, there also must be an update array,
+     * keys hold the column names, and values hold the, well, values.
+     */
+    public function updateBy(array $updates, $where)
+    {
+        $this->_withDeleted();
+        $this->_where = $where;
+
+        $where = $this->_setWhere();
+        $updateString = "";
+        foreach ($updates as $col => $value) {
+            $updateString .= "{$col} = ";
+            if (is_string($value) === true) {
+                $value = "'{$value}'";
+            }
+            $updateString .= "{$value}, ";
+        }
+        $updateString = rtrim($updateString, ", ");
+        return $this->db->query(
+            "UPDATE {$this->tablePrefix}{$this->table} SET {$updateString} WHERE {$where}", $this->whereBinds
+        );
+    }
+
+    /**
+     * Delete by primary key
+     *
+     * If ID === 0, all records are deleted.
+     */
+    public function delete($id = 0)
+    {
+        if ($id === 0) {
+            return $this->deleteBy(array());
+        } else {
+            return $this->deleteBy(array($this->primaryKey => $id));
+        }
+    }
+
+    /**
+     * Delete row(s)
+     *
+     * Input parameters can be column name, column value in an array, which are then
+     * added to the queries WHERE statement, and an array of
+     * columns to be selected, or "*" (default) for all columns.
+     *
+     * If soft delete is used, an update is issued, if not, the row is DELETED!
+     */
+    public function deleteBy($where)
+    {
+        $status = false;
+        $this->_where = $where;
+        /**
+         * if we are doing a hard delete, check if we maybe have to also
+         * delete some old soft deleted rows, and run the delete statement
+         */
+        if ($this->softDelete === C::DELETEHARD) {
+            $this->_withDeleted();
+            $this->_setWhere();
+
+            $status = $this->db->query(
+                "DELETE FROM {$this->tablePrefix}{$this->table} WHERE {$where}", $this->whereBinds
+            );
+        } else {
+            $update = array();
+            if ($this->softDelete === C::DELETESOFTMARK) {
+                $update = array($this->deleteCol => true);
+            } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
+                $update = array($this->statusCol => $this->deleteStatus);
+            }
+            $status = $this->updateby($update, $where);
+        }
+
+        return $status;
     }
 
     /**********
@@ -201,6 +284,20 @@ class Model extends \CI_Model
      * Protected Methods *
      *********************/
     /**
+     * Include deleted where statement
+     */
+    protected function _withDeleted()
+    {
+        if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
+            if ($this->softDelete === C::DELETESOFTMARK) {
+                $this->_where[$this->deleteCol] = false;
+            } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
+                $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
+            }
+        }
+        $this->_where = array_merge($where, $this->_where);
+    }
+    /**
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
      */
     protected function _setWhere()
@@ -211,11 +308,13 @@ class Model extends \CI_Model
         }
 
         $where = "";
+        $link = false;
         foreach ($this->_where as $col => $value) {
             if (is_array($value) === true) {
                 $where .= $this->_addWhereGroup($value);
             } else {
-                $where .= $this->_setWhereValue($col, $value);
+                $where .= $this->_setWhereValue($col, $value, $link);
+                $link = true;
             }
         }
 
@@ -234,6 +333,7 @@ class Model extends \CI_Model
                 $where .= $this->_addWhereGroup($value);
             } else {
                 $where .= $this->_setWhereValue($col, $value, $link);
+                $link = true;
             }
         }
         $where .= ")";
@@ -259,12 +359,11 @@ class Model extends \CI_Model
         } else {
             $value = "?";
         }
-        $where .= "{$link}";
         $where .= "{$columnName}";
         if (strpos($columnName, " ") === false) {
             $where.= " =";
         }
-        $where .= " {$value}";
+        $where .= " {$value} ";
         return $where;
     }
 
