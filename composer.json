@@ -2,7 +2,7 @@
     "name": "slaxweb/ci-basemodel",
     "description": "BaseModel for CodeIgniter",
     "license": "GPLv3",
-    "version": "0.1.0.0",
+    "version": "0.1.0",
     "authors": [
         {
             "name": "Tomaz Lovrec",
@@ -15,11 +15,6 @@
 	"autoload":	{
 		"psr-0": {
 			"SlaxWeb\\BaseModel": ""
-		}
-	},
-	"extra":	{
-		"branch-alias": {
-			"dev-develop": "0.1.0.x-dev"
 		}
 	},
     "target-dir": "SlaxWeb/BaseModel"

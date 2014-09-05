@@ -20,7 +20,7 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basemodel": "0.1.*@dev"
+    "slaxweb/ci-basemodel": "~0.1"
   }
 }
 ```
@@ -37,3 +37,5 @@ The BaseModel is meant to be extended by your models, so, instead of extending f
 ```PHP
 class Some_model extend \SlaxWeb\BaseModel\Model
 ```
+
+This is just a draft...More documentation will follow...
