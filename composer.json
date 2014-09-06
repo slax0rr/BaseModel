@@ -2,7 +2,7 @@
     "name": "slaxweb/ci-basemodel",
     "description": "BaseModel for CodeIgniter",
     "license": "GPLv3",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "authors": [
         {
             "name": "Tomaz Lovrec",
