@@ -37,7 +37,9 @@ class Result
     {
         $this->_result = $result;
         $this->_rows = count($this->_result);
-        $this->_resultRow = $this->_result[0];
+        if ($this->_rows > 0) {
+            $this->_resultRow = $this->_result[0];
+        }
     }
 
     /**
