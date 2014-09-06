@@ -183,7 +183,7 @@ class Model extends \CI_Model
         $binds = array();
         foreach ($data as $col => $value) {
             $binds[] = $value;
-            $value = is_string($value) ? "'?'" : "?";
+            $value = "?";
             $insert["cols"] .= "{$col},";
             $insert["values"] .= "{$value},";
         }
@@ -228,7 +228,7 @@ class Model extends \CI_Model
         $binds = array();
         foreach ($data as $col => $value) {
             $binds[] = $value;
-            $value = is_string($value) ? "'?'" : "?";
+            $value = "?";
             $updateString .= "{$col} = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
@@ -374,11 +374,7 @@ class Model extends \CI_Model
             $where .= "AND ";
         }
         $this->whereBinds[] = $value;
-        if (is_string($value) === true && strpos($value, "(") === false) {
-            $value = "'?'";
-        } else {
-            $value = "?";
-        }
+        $value = "?";
         $where .= "{$columnName}";
         if (strpos($columnName, " ") === false) {
             $where.= " =";
