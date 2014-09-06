@@ -316,7 +316,6 @@ class Model extends \CI_Model
                 $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
             }
         }
-        $this->_where = array_merge($where, $this->_where);
     }
     /**
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
