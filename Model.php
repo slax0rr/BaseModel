@@ -72,6 +72,23 @@ class Model extends \CI_Model
      * @var string
      */
     public $deleteStatus = "deleted";
+
+    /**************
+     * Validation *
+     **************/
+    /**
+     * Validation rules
+     *
+     * Validation rules need to be in same format as for Form_validation,
+     * the validation is ran automatically for insert and update.
+     *
+     * @var mixed
+     */
+    public $rules = null;
+
+    /*********
+     * Where *
+     *********/
     /**
      * Custom where string
      *
@@ -112,6 +129,14 @@ class Model extends \CI_Model
      * @var bool
      */
     protected $_ignoreSoftDelete = false;
+    /**
+     * Skip validation
+     *
+     * For next query
+     *
+     * @var bool
+     */
+    protected $_ignoreValidation = false;
     /**
      * Where array
      *
@@ -181,6 +206,9 @@ class Model extends \CI_Model
     {
         $insert = array("cols" => "", "values" => "");
         $binds = array();
+        if ($this->validate($data) === false) {
+            return false;
+        }
         foreach ($data as $col => $value) {
             $binds[] = $value;
             $value = "?";
@@ -226,6 +254,9 @@ class Model extends \CI_Model
         $where = $this->_setWhere();
         $updateString = "";
         $binds = array();
+        if ($this->validate($data) === false) {
+            return false;
+        }
         foreach ($data as $col => $value) {
             $binds[] = $value;
             $value = "?";
@@ -301,6 +332,42 @@ class Model extends \CI_Model
         return $this;
     }
 
+    /**
+     * Skip Validation on next query.
+     */
+    public function skipValidation()
+    {
+        $this->_ignoreValidation = true;
+        return $this;
+    }
+
+    /**
+     * Validate the data about to be inserted
+     */
+    public function validate($data)
+    {
+        $status = true;
+        if ($this->_ignoreValidation === true) {
+            $this->_ignoreValidation = false;
+            return $status;
+        }
+
+        if (empty($this->rules) === false) {
+            $oldPost = $_POST;
+            foreach ($data as $key => $value) {
+                $_POST[$key] = $value;
+            }
+            if (is_array($this->rules) === true) {
+                $this->form_validation->set_rules($this->rules);
+                $status = $this->form_validation->run();
+            } else {
+                $status = $this->form_validation->run($this->rules);
+            }
+            $_POST = $oldPost;
+        }
+        return $status;
+    }
+
     /*********************
      * Protected Methods *
      *********************/
@@ -317,6 +384,7 @@ class Model extends \CI_Model
             }
         }
     }
+
     /**
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
      */
