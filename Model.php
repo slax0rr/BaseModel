@@ -224,7 +224,11 @@ class Model extends \CI_Model
      */
     public function insert(array $data)
     {
-        $insert = array("cols" => "", "values" => "");
+        $insert = $this->_setPrimaryKey();
+        if ($this->keyType === C::PKEYFUNC) {
+            $insert["cols"] = "{$this->primaryKey},";
+            $insert["value"] = "{$this->keyValue},";
+        }
         $binds = array();
         if ($this->validate($data) === false) {
             return false;
@@ -469,6 +473,27 @@ class Model extends \CI_Model
         }
         $where .= " {$value} ";
         return $where;
+    }
+
+    /**
+     * Prepare primary key for insert
+     */
+    protected function _setPrimaryKey()
+    {
+        $data = array("cols" => "", "values" => "");
+        switch ($this->keyType) {
+        case C::PKEYAI:
+            // no need to do anything, database will handle everything
+            break;
+        case C::PKEYUUID:
+            $data["cols"] = "{$this->primaryKey},";
+            $data["values"] = "UUID(),";
+            break;
+        case C::PKEYFUNC:
+            $data["cols"] = "{$this->primaryKey},";
+            $data["values"] = call_user_func($this->keyFunc, $this->keyFuncParams);
+        }
+        return $data;
     }
 
     /**
