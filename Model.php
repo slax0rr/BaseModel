@@ -59,7 +59,7 @@ class Model extends \CI_Model
      *
      * @var array
      */
-    public $keyFuncParams - array();
+    public $keyFuncParams = array();
 
     /***************
      * Soft delete *
