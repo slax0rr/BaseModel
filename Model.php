@@ -40,6 +40,26 @@ class Model extends \CI_Model
      * @var string
      */
     public $primaryKey = "id";
+    /**
+     * Primary key type
+     *
+     * @var int
+     */
+    public $keyType = C::PKEYAI;
+    /**
+     * Primary key function
+     *
+     * Needs to be of type callable
+     *
+     * @var mixed
+     */
+    public $keyFunc = "";
+    /**
+     * Key function parameters
+     *
+     * @var array
+     */
+    public $keyFuncParams - array();
 
     /***************
      * Soft delete *
