@@ -482,16 +482,18 @@ class Model extends \CI_Model
     {
         $data = array("cols" => "", "values" => "");
         switch ($this->keyType) {
-        case C::PKEYAI:
-            // no need to do anything, database will handle everything
-            break;
-        case C::PKEYUUID:
-            $data["cols"] = "{$this->primaryKey},";
-            $data["values"] = "UUID(),";
-            break;
-        case C::PKEYFUNC:
-            $data["cols"] = "{$this->primaryKey},";
-            $data["values"] = call_user_func($this->keyFunc, $this->keyFuncParams);
+            case C::PKEYAI:
+            case C::PKEYNONE;
+                // no need to do anything, database will handle everything
+                break;
+            case C::PKEYUUID:
+                $data["cols"] = "{$this->primaryKey},";
+                $data["values"] = "UUID(),";
+                break;
+            case C::PKEYFUNC:
+                $data["cols"] = "{$this->primaryKey},";
+                $data["values"] = call_user_func($this->keyFunc, $this->keyFuncParams);
+                break;
         }
         return $data;
     }
