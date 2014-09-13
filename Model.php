@@ -1,6 +1,7 @@
 <?php
 namespace SlaxWeb\BaseModel;
 
+use \SlaxWeb\BaseModel\Error;
 use \SlaxWeb\BaseModel\Result;
 use \SlaxWeb\BaseModel\Constants as C;
 
@@ -231,7 +232,7 @@ class Model extends \CI_Model
         }
         $binds = array();
         if ($this->validate($data) === false) {
-            return false;
+            return (new Error($this->lang->language))->add("VALIDATION_ERROR");
         }
         foreach ($data as $col => $value) {
             $binds[] = $value;
@@ -241,10 +242,15 @@ class Model extends \CI_Model
         }
         $insert["cols"] = rtrim($insert["cols"], ",");
         $insert["values"] = rtrim($insert["values"], ",");
-        return $this->db->query(
+        $status = $this->db->query(
             "INSERT INTO `{$this->tablePrefix}{$this->table}` ({$insert["cols"]}) VALUES ({$insert["values"]})",
             $binds
         );
+        if ($status === false) {
+            $status = new Error($this->lang->language);
+            $status->add("CREATE_ERROR");
+        }
+        return $status;
     }
 
     /**
