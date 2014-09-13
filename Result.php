@@ -94,4 +94,12 @@ class Result
     {
         return $this->_rows;
     }
+
+    /**
+     * Get all rows
+     */
+    public function getResult()
+    {
+        return $this->_result;
+    }
 }
