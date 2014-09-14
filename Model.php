@@ -161,8 +161,7 @@ class Model extends \CI_Model
     {
         $this->_withDeleted();
 
-        $this->_where = $where;
-        $where = $this->_setWhere();
+        $where = $this->_setWhere($where);
         if (is_array($cols) === true) {
             $cols = implode(",", $cols);
         }
@@ -221,9 +220,8 @@ class Model extends \CI_Model
     public function updateBy(array $data, $where)
     {
         $this->_withDeleted();
-        $this->_where = $where;
 
-        $where = $this->_setWhere();
+        $where = $this->_setWhere($where);
         $updateString = "";
         $binds = array();
         foreach ($data as $col => $value) {
@@ -264,14 +262,13 @@ class Model extends \CI_Model
     public function deleteBy($where)
     {
         $status = false;
-        $this->_where = $where;
         /**
          * if we are doing a hard delete, check if we maybe have to also
          * delete some old soft deleted rows, and run the delete statement
          */
         if ($this->softDelete === C::DELETEHARD) {
             $this->_withDeleted();
-            $this->_setWhere();
+            $this->_setWhere($where);
 
             $status = $this->db->query(
                 "DELETE FROM `{$this->tablePrefix}{$this->table}` WHERE {$where}", $this->whereBinds
@@ -320,12 +317,14 @@ class Model extends \CI_Model
     /**
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
      */
-    protected function _setWhere()
+    protected function _setWhere($where)
     {
         // if user has set his own where string, use it.
         if ($this->where !== "") {
             return $this->where;
         }
+
+        $this->_where = array_merge($this->_where, $where);
 
         $where = "";
         $link = false;
@@ -338,7 +337,7 @@ class Model extends \CI_Model
             }
         }
 
-        return $where;
+        return (empty($where)) ? "" : "WHERE {$where}";
     }
 
     /**
