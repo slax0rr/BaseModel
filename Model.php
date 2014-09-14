@@ -205,6 +205,7 @@ class Model extends \CI_Model
      */
     public function getBy($where, $cols = "*")
     {
+        $this->_where = array();
         $this->_withDeleted();
 
         $where = $this->_setWhere($where);
@@ -279,6 +280,7 @@ class Model extends \CI_Model
      */
     public function updateBy(array $data, $where)
     {
+        $this->_where = array();
         $this->_withDeleted();
 
         $where = $this->_setWhere($where);
@@ -330,6 +332,7 @@ class Model extends \CI_Model
          * delete some old soft deleted rows, and run the delete statement
          */
         if ($this->softDelete === C::DELETEHARD) {
+            $this->_where = array();
             $this->_withDeleted();
             $this->_setWhere($where);
 
