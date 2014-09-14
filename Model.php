@@ -232,7 +232,9 @@ class Model extends \CI_Model
         }
         $binds = array();
         if ($this->validate($data) === false) {
-            return (new Error($this->lang->language))->add("VALIDATION_ERROR");
+            $error = new Error($this->lang->language);
+            $error->add("VALIDATION_ERROR");
+            return $error;
         }
         foreach ($data as $col => $value) {
             $binds[] = $value;
