@@ -25,7 +25,9 @@ Table of contents
   * [Updating data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#updating-data)
   * [Deleting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deleting-data)
 * [SQL clauses](https://github.com/slax0rr/BaseModel/blob/develop/README.md#sql-clauses)
+  * [GROUP BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#group-by)
   * [ORDER BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#order-by)
+  * [LIMIT](https://github.com/slax0rr/BaseModel/blob/develop/README.md#limit)
 * [Validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#validation)
   * [Run validation manually](https://github.com/slax0rr/BaseModel/blob/develop/README.md#run-validation-manually)
   * [Skipping validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#skipping-validation)
@@ -177,10 +179,20 @@ SQL clauses
 
 BaseModel suppors some SQL clauses that you can use.
 
+GROUP BY
+--------
+
+To add a group by clause to the next query, set it with the **groupBy** method. The input parameter must be an array containing the columns you wish to group by. It returns the object of the model so you can link your method calls.
+
 ORDER BY
 --------
 
 To add an order by clause to the query set it with the **orderBy** method. It will be used only for the next query. First parameter must be an array, and must contain column names. The second parameter is the direction of order by, default is "ascending". The method returns the object of the model, so you can link together your method calls.
+
+LIMIT
+-----
+
+To add a limit clause to the next query, set it with the **limit** method. It takes two integer parameters, the first one is the limit on how many rows you want to affect with your query, and the second, default int(0) is the offset, at which row to begin counting.
 
 Validation
 ==========
