@@ -164,6 +164,12 @@ class Model extends \CI_Model
      * @var array
      */
     protected $_where = array();
+    /**
+     * Order by
+     *
+     * @var string
+     */
+    protected $_orderBy = "";
 
     /***********
      * Methods *
@@ -214,8 +220,9 @@ class Model extends \CI_Model
         }
 
         $query = $this->db->query(
-            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where}", $this->whereBinds
+            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_orderBy}", $this->whereBinds
         );
+        $this->_orderBy = "";
 
         return new Result($query->result_object());
     }
@@ -298,9 +305,10 @@ class Model extends \CI_Model
         }
         $updateString = rtrim($updateString, ", ");
         $status = $this->db->query(
-            "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$where}",
+            "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$where} {$this->_orderBy}",
             array_merge($binds, $this->whereBinds)
         );
+        $this->_orderBy = "";
 
         if ($status === false) {
             $status = new Error($this->lang->language);
@@ -346,8 +354,9 @@ class Model extends \CI_Model
             $this->_setWhere($where);
 
             $status = $this->db->query(
-                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where}", $this->whereBinds
+                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_orderBy}", $this->whereBinds
             );
+            $this->_orderBy = "";
         } else {
             $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
@@ -380,6 +389,19 @@ class Model extends \CI_Model
     {
         $this->_ignoreValidation = true;
         return $this;
+    }
+
+    /**
+     * Add an order by to next statement
+     */
+    public function orderBy(array $columns, $direction = "asc")
+    {
+        $this->_orderBy = "ORDER BY ";
+        foreach ($columns as $c) {
+            $this->_orderBy .= "`{$c}`,";
+        }
+        $this->_orderBy = rtrim($this->_orderBy, ",");
+        $this->_orderBy .= " {$direction}";
     }
 
     /**
