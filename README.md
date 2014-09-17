@@ -269,4 +269,37 @@ Traversing through errors
 
 The same as the Result class, Error class provides a **prev** and **next** methods, that return false if there is no previous or next errors, or the object to it self for method linking, but it does not provide a method like **row**, except the **errorAt** which returns already the error at the provided index.
 
---- To be continued ---
+ChangeLog
+=========
+
+0.2.5
+-----
+* Reset the where array between queries
+
+0.2.4
+-----
+* Remove WHERE keyword from query when there is no WHERE statement
+
+0.2.3
+-----
+* With deleted where statement was mistakingly removed
+
+0.2.2
+-----
+* Add backtics to column names
+
+0.2.1
+-----
+
+* Remove quotes on bound placeholders
+
+0.2.0
+-----
+
+* Add insert method
+* Bind parameters to update statement
+
+0.1.0
+-----
+
+* Initial release
