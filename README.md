@@ -12,9 +12,34 @@ This is still in development phase, but is available for public as early-beta. P
 Table of contents
 =================
 * [BaseModel](https://github.com/slax0rr/BaseModel/blob/develop/README.md#basemodel)
+* [Table of contents](https://github.com/slax0rr/BaseModel/blob/develop/README.md#table-of-contents)
 * [Install](https://github.com/slax0rr/BaseModel/blob/develop/README.md#install)
   * [Use the BaseModel](https://github.com/slax0rr/BaseModel/blob/develop/README.md#use-the-basemodel)
-
+* [Properties](https://github.com/slax0rr/BaseModel/blob/develop/README.md#properties)
+* [Table names](https://github.com/slax0rr/BaseModel/blob/develop/README.md#table-names)
+  * [Guessing the table name](https://github.com/slax0rr/BaseModel/blob/develop/README.md#guessing-the-table-name)
+* [Config constants](https://github.com/slax0rr/BaseModel/blob/develop/README.md#config-constants)
+* [Database operations](https://github.com/slax0rr/BaseModel/blob/develop/README.md#database-operations)
+  * [Inserting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#inserting-data)
+  * [Getting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-data)
+  * [Updating data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#updating-data)
+  * [Deleting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deleting-data)
+* [Validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#validation)
+  * [Run validation manually](https://github.com/slax0rr/BaseModel/blob/develop/README.md#run-validation-manually)
+  * [Skipping validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#skipping-validation)
+* [Queries on soft deleted rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#queries-on-soft-deleted-rows)
+* [Results](https://github.com/slax0rr/BaseModel/blob/develop/README.md#results)
+  * [Getting column data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-column-data)
+  * [Number of rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#number-of-rows)
+  * [Get all rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#get-all-rows)
+  * [Traversing through rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#traversing-through-rows)
+* [Errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#errors)
+  * [Initialization of the Error class](https://github.com/slax0rr/BaseModel/blob/develop/README.md#initialization-of-the-error-class)
+  * [Add an error](https://github.com/slax0rr/BaseModel/blob/develop/README.md#add-an-error)
+  * [Has errors and count errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#has-errors-and-count-errors)
+  * [Getting errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-errors)
+  * [Traversing through errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#traversing-through-errors)
+* [ChangeLog](https://github.com/slax0rr/BaseModel/blob/develop/README.md#changelog)
 
 Install
 =======
