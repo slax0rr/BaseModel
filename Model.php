@@ -402,6 +402,8 @@ class Model extends \CI_Model
         }
         $this->_orderBy = rtrim($this->_orderBy, ",");
         $this->_orderBy .= " {$direction}";
+
+        return $this;
     }
 
     /**
