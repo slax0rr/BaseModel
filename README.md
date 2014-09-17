@@ -24,6 +24,8 @@ Table of contents
   * [Getting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-data)
   * [Updating data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#updating-data)
   * [Deleting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deleting-data)
+* [SQL clauses](https://github.com/slax0rr/BaseModel/blob/develop/README.md#sql-clauses)
+  * [ORDER BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#order-by)
 * [Validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#validation)
   * [Run validation manually](https://github.com/slax0rr/BaseModel/blob/develop/README.md#run-validation-manually)
   * [Skipping validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#skipping-validation)
@@ -169,6 +171,16 @@ Deleting data
 -------------
 
 For deletion you once again have two methods, **delete** and **deleteBy**, and once again, you can delete by primary key value, your own where statement, or delete everything. If you are using deletion by status or deleted columns, this method will automatically make an update for you, and mark the row(s) as deleted. For usage examples, refer to (Getting data), because the usage is exactly the same, except the different method names.
+
+SQL clauses
+===========
+
+BaseModel suppors some SQL clauses that you can use.
+
+ORDER BY
+--------
+
+To add an order by clause to the query set it with the **orderBy** method. It will be used only for the next query. First parameter must be an array, and must contain column names. The second parameter is the direction of order by, default is "ascending". The method returns the object of the model, so you can link together your method calls.
 
 Validation
 ==========
