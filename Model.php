@@ -165,7 +165,13 @@ class Model extends \CI_Model
      */
     protected $_where = array();
     /**
-     * Order by
+     * Group by clause
+     *
+     * @var string
+     */
+    protected $_groupBy = "";
+    /**
+     * Order by clause
      *
      * @var string
      */
@@ -395,6 +401,18 @@ class Model extends \CI_Model
     }
 
     /**
+     * Add group by clause to the next statement
+     */
+    public function groupBy(array $columns)
+    {
+        foreach ($columns as $c) {
+            $this->_groupBy .= "`{$c}`,";
+        }
+        $this->_groupBy = rtrim($this->_groupBy, ",");
+        return $this;
+    }
+
+    /**
      * Add an order by to next statement
      */
     public function orderBy(array $columns, $direction = "asc")
@@ -571,7 +589,7 @@ class Model extends \CI_Model
     protected function _getClauses()
     {
         $clauses = "";
-        $clauses = "{$this->_orderBy} {$this->_limit}";
+        $clauses = "{$this->_groupBy} {$this->_orderBy} {$this->_limit}";
         $this->_orderBy = "";
         $this->_limit = "";
         return $clauses;
