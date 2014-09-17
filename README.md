@@ -326,7 +326,8 @@ ChangeLog
 
 * Add Error class
 * Add validation
-* Add primary key types
+* Add primary key type
+* Add GROUP BY, ORDER BY and LIMIT clauses
 
 0.2.5
 -----
