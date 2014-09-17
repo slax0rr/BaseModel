@@ -170,6 +170,12 @@ class Model extends \CI_Model
      * @var string
      */
     protected $_orderBy = "";
+    /**
+     * Limit clause
+     *
+     * @var string
+     */
+    protected $_limit = "";
 
     /***********
      * Methods *
@@ -220,9 +226,8 @@ class Model extends \CI_Model
         }
 
         $query = $this->db->query(
-            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_orderBy}", $this->whereBinds
+            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}", $this->whereBinds
         );
-        $this->_orderBy = "";
 
         return new Result($query->result_object());
     }
@@ -305,10 +310,9 @@ class Model extends \CI_Model
         }
         $updateString = rtrim($updateString, ", ");
         $status = $this->db->query(
-            "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$where} {$this->_orderBy}",
+            "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$where} {$this->_getClauses()}",
             array_merge($binds, $this->whereBinds)
         );
-        $this->_orderBy = "";
 
         if ($status === false) {
             $status = new Error($this->lang->language);
@@ -354,9 +358,8 @@ class Model extends \CI_Model
             $this->_setWhere($where);
 
             $status = $this->db->query(
-                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_orderBy}", $this->whereBinds
+                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}", $this->whereBinds
             );
-            $this->_orderBy = "";
         } else {
             $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
@@ -403,6 +406,15 @@ class Model extends \CI_Model
         $this->_orderBy = rtrim($this->_orderBy, ",");
         $this->_orderBy .= " {$direction}";
 
+        return $this;
+    }
+
+    /**
+     * Add the limit clause to the next statement
+     */
+    public function limit($limit, $start = 0)
+    {
+        $this->_limit = "LIMIT {$start}, {$limit}";
         return $this;
     }
 
@@ -551,5 +563,17 @@ class Model extends \CI_Model
         if ($this->table === "") {
             $this->table = plural(preg_replace("/(_m|_model)?$/", "", strtolower(get_class($this))));
         }
+    }
+
+    /**
+     * Concatenate clauses in right order and remove their contents
+     */
+    protected function _getClauses()
+    {
+        $clauses = "";
+        $clauses = "{$this->_orderBy} {$this->_limit}";
+        $this->_orderBy = "";
+        $this->_limit = "";
+        return $clauses;
     }
 }
