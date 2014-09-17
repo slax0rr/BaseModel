@@ -2,7 +2,7 @@
     "name": "slaxweb/ci-basemodel",
     "description": "BaseModel for CodeIgniter",
     "license": "MIT",
-    "version": "0.2.5",
+    "version": "0.3.0",
     "authors": [
         {
             "name": "Tomaz Lovrec",
@@ -11,6 +11,11 @@
     ],
     "require": {
 		"php":	">=5.3.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.3.x-dev"
+        }
     },
 	"autoload":	{
 		"psr-0": {
