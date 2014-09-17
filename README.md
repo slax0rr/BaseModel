@@ -272,6 +272,13 @@ The same as the Result class, Error class provides a **prev** and **next** metho
 ChangeLog
 =========
 
+0.3.0 - development
+-------------------
+
+* Add Error class
+* Add validation
+* Add primary key types
+
 0.2.5
 -----
 * Reset the where array between queries
