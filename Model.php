@@ -287,7 +287,9 @@ class Model extends \CI_Model
         $updateString = "";
         $binds = array();
         if ($this->validate($data) === false) {
-            return false;
+            $error = new Error($this->lang->language);
+            $error->add("VALIDATION_ERROR");
+            return $error;
         }
         foreach ($data as $col => $value) {
             $binds[] = $value;
@@ -295,10 +297,17 @@ class Model extends \CI_Model
             $updateString .= "`{$col}` = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
-        return $this->db->query(
+        $status = $this->db->query(
             "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$where}",
             array_merge($binds, $this->whereBinds)
         );
+
+        if ($status === false) {
+            $status = new Error($this->lang->language);
+            $status->add("UPDATE_ERROR");
+        }
+
+        return $status;
     }
 
     /**
