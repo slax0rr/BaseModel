@@ -181,7 +181,7 @@ For deletion you once again have two methods, **delete** and **deleteBy**, and o
 Building WHERE statements
 =========================
 
-BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE `column1` = 'value' AND `column2` = 'value'*.
+BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE ``column1`` = 'value' AND ``column2`` = 'value'*.
 
 Conditional operators
 ---------------------
@@ -190,7 +190,7 @@ To replace AND with any other conditional operator between two WHERE expressions
 ```PHP
 $this->getBy(array("column1" => "value1", "OR column2" => "value2"));
 ```
-The above example will produce **WHERE `column1` = 'value1' OR `column2` = 'value2'**.
+The above example will produce **WHERE ``column1`` = 'value1' OR ``column2`` = 'value2'**.
 
 **NOTE:** at the moment this works only with *OR*, working on more.
 
@@ -201,7 +201,7 @@ Normally BaseModel uses the *equal* comparison operator between column and value
 ```PHP
 $this->getBy(array("column1 <" => 10));
 ```
-The above example will produce **WHERE `column` < 10**.
+The above example will produce **WHERE ``column`` < 10**.
 
 Grouping WHERE expressions
 --------------------------
@@ -218,7 +218,7 @@ $this->getBy(
  )
 );
 ```
-Above example will produce **WHERE (`groupCol1` = 'groupVal1' AND `groupCol2` = 'groupVal2') OR `column1` = 'value1'**.
+Above example will produce **WHERE (``groupCol1`` = 'groupVal1' AND ``groupCol2`` = 'groupVal2') OR ``column1`` = 'value1'**.
 
 SQL clauses
 ===========
