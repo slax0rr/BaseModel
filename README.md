@@ -24,6 +24,10 @@ Table of contents
   * [Getting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-data)
   * [Updating data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#updating-data)
   * [Deleting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deleting-data)
+* [Building WHERE statements](https://github.com/slax0rr/BaseModel/blob/develop/README.md#building-where-statements)
+  * [Conditional operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#conditional-operators)
+  * [Comparison operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#comparison-operators)
+  * [Grouping WHERE expressions](https://github.com/slax0rr/BaseModel/blob/develop/README.md#grouping-where-expressions)
 * [SQL clauses](https://github.com/slax0rr/BaseModel/blob/develop/README.md#sql-clauses)
   * [GROUP BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#group-by)
   * [ORDER BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#order-by)
@@ -173,6 +177,48 @@ Deleting data
 -------------
 
 For deletion you once again have two methods, **delete** and **deleteBy**, and once again, you can delete by primary key value, your own where statement, or delete everything. If you are using deletion by status or deleted columns, this method will automatically make an update for you, and mark the row(s) as deleted. For usage examples, refer to (Getting data), because the usage is exactly the same, except the different method names.
+
+Building WHERE statements
+=========================
+
+BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE `column1` = 'value' AND `column2` = 'value'*.
+
+Conditional operators
+---------------------
+
+To replace AND with any other conditional operator between two WHERE expressions, you have to prefix your column name in the array key with your desired conditional operator.
+```PHP
+$this->getBy(array("column1" => "value1", "OR column2" => "value2"));
+```
+The above example will produce **WHERE `column1` = 'value1' OR `column2` = 'value2'**.
+
+**NOTE:** at the moment this works only with *OR*, working on more.
+
+Comparison operators
+--------------------
+
+Normally BaseModel uses the *equal* comparison operator between column and value, but should you need any other, you have add it as a suffix to the column name in the where array.
+```PHP
+$this->getBy(array("column1 <" => 10));
+```
+The above example will produce **WHERE `column` < 10**.
+
+Grouping WHERE expressions
+--------------------------
+
+You can also group sets of expressions as you wish to. To do so, simply add a sub-array with further where expressions in this sub-array.
+```PHP
+$this->getBy(
+ array(
+  array(
+   "groupCol1" => "groupVal1",
+   "groupCol2" => "groupVal2"
+  ),
+  "OR column1" => "value1"
+ )
+);
+```
+Above example will produce **WHERE (`groupCol1` = 'groupVal1' AND `groupCol2` = 'groupVal2') OR `column1` = 'value1'**.
 
 SQL clauses
 ===========
