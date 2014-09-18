@@ -181,7 +181,7 @@ For deletion you once again have two methods, **delete** and **deleteBy**, and o
 Building WHERE statements
 =========================
 
-BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE ``column1`` = 'value' AND ``column2`` = 'value'*.
+BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE \`column1\` = 'value' AND ``column2`` = 'value'*.
 
 Conditional operators
 ---------------------
