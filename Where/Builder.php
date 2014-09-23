@@ -60,6 +60,15 @@ class Builder
         return $this;
     }
 
+    public function clear()
+    {
+        $this->_currentIndex = 0;
+        $this->_expressions = array();
+        $this->binds = array();
+
+        return $this;
+    }
+
     public function toString()
     {
         $where = "";
