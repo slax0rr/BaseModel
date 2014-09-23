@@ -55,6 +55,14 @@ class Result
     }
 
     /**
+     * Return current row as string, separated by commas.
+     */
+    public function __toString()
+    {
+        return implode(",", $this->asArray());
+    }
+
+    /**
      * Move to next result row
      */
     public function next()
