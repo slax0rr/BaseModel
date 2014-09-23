@@ -22,7 +22,7 @@ class Expression
     {
         $expr = "";
         // add the logical operator
-        $expr .= " {$this->logicalOperator} ";
+        $expr .= empty($this->logicalOperator) ? "" : " {$this->logicalOperator} ";
 
         // check if we need to go into a subgroup
         if ($this->groupBegin) {

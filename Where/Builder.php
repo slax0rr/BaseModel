@@ -67,6 +67,6 @@ class Builder
             $where .= (string)$e;
             $this->binds = array_merge($this->binds, $e->binds);
         }
-        return $where;
+        return empty($where) ? "" : "WHERE {$where}";
     }
 }
