@@ -77,6 +77,8 @@ class Some_model extend \SlaxWeb\BaseModel\Model
 ```
 With this, your BaseModel is ready to use.
 
+As an alternative, you can also extend from *MY_Model* and have MY_Model extending BaseModel.
+
 Properties
 ==========
 
