@@ -4,6 +4,7 @@ namespace SlaxWeb\BaseModel;
 use \SlaxWeb\BaseModel\Error;
 use \SlaxWeb\BaseModel\Result;
 use \SlaxWeb\BaseModel\Constants as C;
+use \SlaxWeb\BaseModel\Where\Builder as B;
 
 /**
  * BaseModel for CodeIgniter
@@ -125,6 +126,12 @@ class Model extends \CI_Model
      * @var array
      */
     public $whereBinds = array();
+    /**
+     * Where builder
+     *
+     * @var \SlaxWeb\BaseModel\Where\Builder
+     */
+    public $wBuild = null;
 
     /*************
      * Callbacks *
@@ -198,6 +205,7 @@ class Model extends \CI_Model
         $this->load->helper("inflector");
         $this->table = $table;
         $this->_setTable();
+        $this->wBuild = new B();
     }
 
     /**
@@ -232,7 +240,8 @@ class Model extends \CI_Model
         }
 
         $query = $this->db->query(
-            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}", $this->whereBinds
+            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}",
+            $this->whereBinds
         );
 
         return new Result($query->result_object());
