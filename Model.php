@@ -234,7 +234,16 @@ class Model extends \CI_Model
         $this->_where = array();
         $this->_withDeleted();
 
+        // DEPRECATED
         $where = $this->_setWhere($where);
+
+        $where .= " {$this->wBuild->toString}";
+
+        // monstrosity...because of deprecated stuff...be sure to remove this in the future
+        if (empty($where) === false) {
+            $where = "WHERE {$where}";
+        }
+
         if (is_array($cols) === true) {
             $cols = implode(",", $cols);
         }
@@ -310,7 +319,15 @@ class Model extends \CI_Model
         $this->_where = array();
         $this->_withDeleted();
 
+        // DEPRECATED
         $where = $this->_setWhere($where);
+
+        $where .= " {$this->wBuild->toString}";
+
+        // monstrosity...because of deprecated stuff...be sure to remove this in the future
+        if (empty($where) === false) {
+            $where = "WHERE {$where}";
+        }
         $updateString = "";
         $binds = array();
         if ($this->validate($data) === false) {
@@ -370,7 +387,15 @@ class Model extends \CI_Model
         if ($this->softDelete === C::DELETEHARD) {
             $this->_where = array();
             $this->_withDeleted();
+            // DEPRECATED
             $this->_setWhere($where);
+
+            $where .= " {$this->wBuild->toString}";
+
+            // monstrosity...because of deprecated stuff...be sure to remove this in the future
+            if (empty($where) === false) {
+                $where = "WHERE {$where}";
+            }
 
             $status = $this->db->query(
                 "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}",
@@ -518,7 +543,7 @@ class Model extends \CI_Model
             }
         }
 
-        return (empty($where)) ? "" : "WHERE {$where}";
+        return $where;
     }
 
     /**
