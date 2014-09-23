@@ -11,8 +11,8 @@ class Expression
     public $column = "";
     public $value = null;
     public $table = "";
-    public $placeholder = false;
     public $comparator = "";
+    public $logicalOperator = "";
     public $groupBegin = false;
     public $groupEnd = false;
 
@@ -20,11 +20,9 @@ class Expression
 
     public function __toString()
     {
-        $value = $this->_prepareValue($this->value);
-
         $expr = "";
         // add the logical operator
-        $expr .= "{$this->logicalOperator} ";
+        $expr .= " {$this->logicalOperator} ";
 
         // check if we need to go into a subgroup
         if ($this->groupBegin) {
@@ -58,7 +56,11 @@ class Expression
         if (is_array($value)) {
             $preparedValue = "(";
             foreach ($value as $v) {
-                $preparedValue .= "?,";
+                if (is_string($v)) {
+                    $preparedValue .= "?,";
+                } else {
+                    $preparedValue .= "{$v},";
+                }
             }
             $preparedValue = rtrim($preparedValue, ",") . ")";
             $this->binds = array_merge($this->binds, $value);

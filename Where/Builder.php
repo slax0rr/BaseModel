@@ -1,7 +1,7 @@
 <?php
 namespace SlaxWeb\BaseModel\Where;
 
-use Expression as E;
+use \SlaxWeb\BaseModel\Where\Expression as E;
 
 /**
  * Where statement builder for BaseModel
@@ -10,28 +10,34 @@ use Expression as E;
  */
 class Builder
 {
+    public $binds = array();
     protected $_expressions = array();
     protected $_currentIndex = 0;
 
     public function add(
         $column,
         $value,
+        $logicalOperator = "AND",
+        $comparator = "=",
         $table = "",
-        $logicalOperator = "=",
-        $comparator = "AND",
         $groupBegin = false,
         $groupEnd = false
     ) {
-        if ($_expression === null) {
-            $comparator = "";
+        if (empty($this->_expressions)) {
+            $logicalOperator = "";
+        } elseif ($logicalOperator === "") {
+            $logicalOperator = "AND";
+        }
+        if ($comparator === "") {
+            $comparator = "=";
         }
 
         $expr = new E();
         $expr->column = $column;
         $expr->value = $value;
         $expr->table = $table;
-        $expr->placeholder = is_string($value);
         $expr->comparator = $comparator;
+        $expr->logicalOperator = $logicalOperator;
         $expr->groupBegin = $groupBegin;
         $expr->groupEnd = $groupEnd;
         $this->_expressions[] = $expr;
@@ -59,6 +65,7 @@ class Builder
         $where = "";
         foreach ($this->_expressions as $e) {
             $where .= (string)$e;
+            $this->binds = array_merge($this->binds, $e->binds);
         }
         return $where;
     }
