@@ -483,9 +483,9 @@ class Model extends \CI_Model
     {
         if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
             if ($this->softDelete === C::DELETESOFTMARK) {
-                $this->_where[$this->deleteCol] = false;
+                $this->wBuild->add($this->deleteCol, false);
             } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
-                $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
+                $this->wBuild->add($this->statusCol, $this->deleteStatus, "", "!=");
             }
         }
     }
