@@ -373,7 +373,8 @@ class Model extends \CI_Model
             $this->_setWhere($where);
 
             $status = $this->db->query(
-                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}", $this->whereBinds
+                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}",
+                $this->whereBinds
             );
         } else {
             $update = array();
@@ -494,8 +495,8 @@ class Model extends \CI_Model
      *
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
      *
-     * This is deprecated in favour of the Where\Builder class, that uses
-     * MOAR BLACK VOODOO MAGIC
+     * This is DEPRECATED in favour of the Where\Builder class, that uses
+     * MOAR BLACK VOODOO MAGIC, reffer to documentation on how to use it.
      */
     protected function _setWhere($where)
     {
@@ -572,7 +573,7 @@ class Model extends \CI_Model
         $data = array("cols" => "", "values" => "");
         switch ($this->keyType) {
             case C::PKEYAI:
-            case C::PKEYNONE;
+            case C::PKEYNONE:
                 // no need to do anything, database will handle everything
                 break;
             case C::PKEYUUID:
