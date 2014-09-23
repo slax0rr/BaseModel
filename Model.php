@@ -490,7 +490,12 @@ class Model extends \CI_Model
     }
 
     /**
+     * DEPRECATED
+     *
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
+     *
+     * This is deprecated in favour of the Where\Builder class, that uses
+     * MOAR BLACK VOODOO MAGIC
      */
     protected function _setWhere($where)
     {
