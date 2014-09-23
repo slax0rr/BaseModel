@@ -69,7 +69,7 @@ class WhereBuilderTest extends PHPUnit_Framework_TestCase
         $builder = new \SlaxWeb\BaseModel\Where\Builder();
         $builder->add("columnName", "value")
             ->add("columnName2", 10, "OR", "<", "", true)
-            ->add("columnName3", "value3", "", "", "", false, true);
+            ->add("columnName3", "value3", "", "", "", false);
         $this->assertEquals("`columnName` = ? OR (`columnName2` < 10 AND `columnName3` = ?)", ltrim($builder->toString()));
     }
 

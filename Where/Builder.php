@@ -20,7 +20,7 @@ class Builder
         $logicalOperator = "AND",
         $comparator = "=",
         $table = "",
-        $group = null,
+        $group = null
     ) {
         if (empty($this->_expressions)) {
             $logicalOperator = "";
