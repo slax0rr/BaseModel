@@ -54,26 +54,40 @@ class Expression
         $preparedValue = $value;
         // if its a list construct
         if (is_array($value)) {
-            $preparedValue = "(";
-            foreach ($value as $v) {
-                if (is_string($v)) {
-                    $preparedValue .= "?,";
-                } else {
-                    $preparedValue .= "{$v},";
-                }
-            }
-            $preparedValue = rtrim($preparedValue, ",") . ")";
-            $this->binds = array_merge($this->binds, $value);
+            $preparedValue = $this->_prepareForBind($value);
         }
 
+        // if the value is a string
         if (is_string($value)) {
             $preparedValue = "?";
             $this->binds[] = $value;
         }
 
+        // if the value is an object
         if (is_object($value)) {
-            $preparedValue = (string)$value;
+            $stringValue = (string)$value;
+            // prepare list for binding
+            $preparedValue = $this->_prepareForBind(explode(",", $stringValue));
         }
         return $preparedValue;
+    }
+
+    protected function _prepareForBind($value)
+    {
+        $preparedValue = "";
+        $addBinds = false;
+        foreach ($value as $v) {
+            if (is_string($v)) {
+                $preparedValue .= "?,";
+                $addBinds = true;
+            } else {
+                $preparedValue .= "{$v},";
+            }
+        }
+        $preparedValue = rtrim($preparedValue, ",");
+        if ($addBinds === true) {
+            $this->binds = array_merge($this->binds, $value);
+        }
+        return count($value) > 1 ? "(" . $preparedValue . ")" : $preparedValue;
     }
 }
