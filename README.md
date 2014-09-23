@@ -1,6 +1,8 @@
 BaseModel
 =========
 
+[![Build Status](https://travis-ci.org/slax0rr/BaseModel.svg?branch=feature%2FwhereBuilder)](https://travis-ci.org/slax0rr/BaseModel)
+
 Base model for CodeIgniter, helps you with your database operations in the model. it auto guesses the table name from the model class name, saves you the hassle of soft deletes and more. BaseModel is also used by [BaseController](https://github.com/slax0rr/BaseModel).
 
 The idea for the BaseModel came from Jamie Rumbelows [base model](https://github.com/jamierumbelow/codeigniter-base-model), with some additions and changes. At this point I would also like to thank [Marco Monteiro](https://github.com/mpmont) and [Sami Keinänen](https://github.com/skope) for their help.
