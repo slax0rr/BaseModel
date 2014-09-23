@@ -20,8 +20,7 @@ class Builder
         $logicalOperator = "AND",
         $comparator = "=",
         $table = "",
-        $groupBegin = false,
-        $groupEnd = false
+        $group = null,
     ) {
         if (empty($this->_expressions)) {
             $logicalOperator = "";
@@ -38,8 +37,7 @@ class Builder
         $expr->table = $table;
         $expr->comparator = $comparator;
         $expr->logicalOperator = $logicalOperator;
-        $expr->groupBegin = $groupBegin;
-        $expr->groupEnd = $groupEnd;
+        $expr->group = $group;
         $this->_expressions[] = $expr;
 
         return $this;

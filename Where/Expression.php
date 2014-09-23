@@ -13,8 +13,7 @@ class Expression
     public $table = "";
     public $comparator = "";
     public $logicalOperator = "";
-    public $groupBegin = false;
-    public $groupEnd = false;
+    public $group = null;
 
     public $binds = array();
 
@@ -25,7 +24,7 @@ class Expression
         $expr .= empty($this->logicalOperator) ? "" : " {$this->logicalOperator} ";
 
         // check if we need to go into a subgroup
-        if ($this->groupBegin) {
+        if ($this->group === true) {
             $expr .= "(";
         }
 
@@ -42,7 +41,7 @@ class Expression
         $expr .= $this->_prepareValue($this->value);
 
         // check if we need to end the subgroup
-        if ($this->groupEnd) {
+        if ($this->group === false) {
             $expr .= ")";
         }
 
