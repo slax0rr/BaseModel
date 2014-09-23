@@ -59,7 +59,13 @@ class Result
      */
     public function __toString()
     {
-        return implode(",", $this->asArray());
+        $list = "";
+        foreach ($this->_result as $r) {
+            $r = (array)$r;
+            $list .= reset($r) . ",";
+        }
+        $list = rtrim($list, ",");
+        return $list;
     }
 
     /**
