@@ -443,6 +443,7 @@ ChangeLog
 * Add primary key type
 * Add GROUP BY, ORDER BY and LIMIT clauses
 * Add WHERE statement builder
+* Add JOIN statements
 
 0.2.5
 -----
