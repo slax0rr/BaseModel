@@ -321,8 +321,10 @@ class Model extends \CI_Model
             return $error;
         }
         foreach ($data as $col => $value) {
-            $binds[] = $value;
-            $value = "?";
+            if (is_string($value)) {
+                $binds[] = $value;
+                $value = "?";
+            }
             $updateString .= "`{$col}` = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
