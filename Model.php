@@ -248,7 +248,7 @@ class Model extends \CI_Model
         }
 
         $sql = "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}`";
-        $query = $this->_runQuery($sql);
+        $query = $this->_runQuery($sql, $where);
 
         return new Result($query->result_object());
     }
@@ -327,7 +327,7 @@ class Model extends \CI_Model
         }
         $updateString = rtrim($updateString, ", ");
         $sql = "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString}";
-        $status = $this->_runQuery($sql);
+        $status = $this->_runQuery($sql, $where);
 
         if ($status === false) {
             $status = new Error($this->lang->language);
@@ -369,7 +369,7 @@ class Model extends \CI_Model
          */
         if ($this->softDelete === C::DELETEHARD) {
             $sql = "DELETE FROM `{$this->tablePrefix}{$this->table}`";
-            $status = $this->_runQuery($sql);
+            $status = $this->_runQuery($sql, $where);
         } else {
             $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
@@ -642,7 +642,7 @@ class Model extends \CI_Model
      * After query has run it shuts down the query, unsets the binds,
      * the joins etc.
      */
-    protected function _runQuery($sql) 
+    protected function _runQuery($sql, $where)
     {
         $this->_withDeleted();
 
