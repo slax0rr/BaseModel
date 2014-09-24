@@ -250,7 +250,7 @@ class Model extends \CI_Model
         $where = $this->_setWhere($where);
 
         $where .= " {$this->wBuild->toString()}";
-        $this->whereBinds = array_merge($this->_whereBinds, $this->wBuild->binds);
+        $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
 
         // monstrosity...because of deprecated stuff...be sure to remove this in the future
         if (empty($where) === false) {
@@ -337,7 +337,7 @@ class Model extends \CI_Model
         $where = $this->_setWhere($where);
 
         $where .= " {$this->wBuild->toString()}";
-        $this->whereBinds = array_merge($this->_whereBinds, $this->wBuild->binds);
+        $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
 
         // monstrosity...because of deprecated stuff...be sure to remove this in the future
         if (empty($where) === false) {
@@ -408,7 +408,7 @@ class Model extends \CI_Model
             $this->_setWhere($where);
 
             $where .= " {$this->wBuild->toString()}";
-            $this->whereBinds = array_merge($this->_whereBinds, $this->wBuild->binds);
+            $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
 
             // monstrosity...because of deprecated stuff...be sure to remove this in the future
             if (empty($where) === false) {
