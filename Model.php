@@ -656,6 +656,7 @@ class Model extends \CI_Model
 
         $wBuild = $this->wBuild->toString();
         if (empty($wBuild) === false) {
+            $where .= empty($where) ? "" : "AND";
             $where .= " {$wBuild}";
             unset($wBuild);
         }
