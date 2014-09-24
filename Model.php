@@ -250,7 +250,7 @@ class Model extends \CI_Model
         $sql = "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}`";
         $query = $this->_runQuery($sql, $where);
 
-        return new Result($query->result_object());
+        return $query ? new Result($query->result_object()) : false;
     }
 
     /**
