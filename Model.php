@@ -441,6 +441,7 @@ class Model extends \CI_Model
      */
     public function groupBy(array $columns)
     {
+        $this->_groupBy = "GROUP BY ";
         foreach ($columns as $c) {
             $this->_groupBy .= "`{$c}`,";
         }
