@@ -248,9 +248,9 @@ class Model extends \CI_Model
         }
 
         $sql = "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}`";
-        $query = $this->_runQuery($sql);
+        $query = $this->_runQuery($sql, $where);
 
-        return new Result($query->result_object());
+        return $query ? new Result($query->result_object()) : false;
     }
 
     /**
@@ -321,13 +321,16 @@ class Model extends \CI_Model
             return $error;
         }
         foreach ($data as $col => $value) {
-            $binds[] = $value;
-            $value = "?";
+            if (is_string($value)) {
+                $binds[] = $value;
+                $value = "?";
+            }
             $updateString .= "`{$col}` = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
+        $this->whereBinds = array_merge($this->whereBinds, $binds);
         $sql = "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString}";
-        $status = $this->_runQuery($sql);
+        $status = $this->_runQuery($sql, $where);
 
         if ($status === false) {
             $status = new Error($this->lang->language);
@@ -369,7 +372,7 @@ class Model extends \CI_Model
          */
         if ($this->softDelete === C::DELETEHARD) {
             $sql = "DELETE FROM `{$this->tablePrefix}{$this->table}`";
-            $status = $this->_runQuery($sql);
+            $status = $this->_runQuery($sql, $where);
         } else {
             $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
@@ -388,25 +391,26 @@ class Model extends \CI_Model
      */
     public function join($table, array $condition, $direction = C::JOININNER)
     {
-        $join = C::JOININNER . " JOIN `{$table}` ON ";
-        $conditions = count($condition);
+        $join = C::JOININNER . " JOIN `{$table}` ON";
+        $conditions = "";
+        $condCount = count($condition);
         $count = 0;
         foreach ($condition as $c) {
-            if ($count > 1) {
+            if ($count > 0) {
                 if (isset($c[2])) {
-                    $join .= "{$c[3]} ";
+                    $conditions .= "{$c[2]} ";
                 } else {
-                    $join .= "AND ";
+                    $conditions .= "AND ";
                 }
             }
-            $join .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.{$c[1]} ";
+            $conditions .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.`{$c[1]}` ";
             $count++;
         }
-        if ($conditions > 1) {
-            $join = "({$join}) ";
+        if ($condCount > 1) {
+            $conditions = "({$conditions})";
         }
 
-        $this->_join .= $join;
+        $this->_join .= "{$join} {$conditions} ";
 
         return $this;
     }
@@ -437,6 +441,7 @@ class Model extends \CI_Model
      */
     public function groupBy(array $columns)
     {
+        $this->_groupBy = "GROUP BY ";
         foreach ($columns as $c) {
             $this->_groupBy .= "`{$c}`,";
         }
@@ -642,7 +647,7 @@ class Model extends \CI_Model
      * After query has run it shuts down the query, unsets the binds,
      * the joins etc.
      */
-    protected function _runQuery($sql) 
+    protected function _runQuery($sql, $where)
     {
         $this->_withDeleted();
 
@@ -651,6 +656,7 @@ class Model extends \CI_Model
 
         $wBuild = $this->wBuild->toString();
         if (empty($wBuild) === false) {
+            $where .= empty($where) ? "" : "AND";
             $where .= " {$wBuild}";
             unset($wBuild);
         }
@@ -673,9 +679,10 @@ class Model extends \CI_Model
             $this->_orderBy = "";
             $this->_groupBy = "";
             $this->_limit = "";
-            $this->_where = array();
-            $this->whereBinds = array();
         }
+        $this->_where = array();
+        $this->whereBinds = array();
+        $this->wBuild->clear();
 
         return $query;
     }
