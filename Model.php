@@ -249,7 +249,7 @@ class Model extends \CI_Model
         // DEPRECATED
         $where = $this->_setWhere($where);
 
-        $where .= " {$this->wBuild->toString}";
+        $where .= " {$this->wBuild->toString()}";
 
         // monstrosity...because of deprecated stuff...be sure to remove this in the future
         if (empty($where) === false) {
@@ -335,7 +335,7 @@ class Model extends \CI_Model
         // DEPRECATED
         $where = $this->_setWhere($where);
 
-        $where .= " {$this->wBuild->toString}";
+        $where .= " {$this->wBuild->toString()}";
 
         // monstrosity...because of deprecated stuff...be sure to remove this in the future
         if (empty($where) === false) {
@@ -405,7 +405,7 @@ class Model extends \CI_Model
             // DEPRECATED
             $this->_setWhere($where);
 
-            $where .= " {$this->wBuild->toString}";
+            $where .= " {$this->wBuild->toString()}";
 
             // monstrosity...because of deprecated stuff...be sure to remove this in the future
             if (empty($where) === false) {
