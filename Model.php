@@ -4,6 +4,7 @@ namespace SlaxWeb\BaseModel;
 use \SlaxWeb\BaseModel\Error;
 use \SlaxWeb\BaseModel\Result;
 use \SlaxWeb\BaseModel\Constants as C;
+use \SlaxWeb\BaseModel\Where\Builder as B;
 
 /**
  * BaseModel for CodeIgniter
@@ -125,6 +126,12 @@ class Model extends \CI_Model
      * @var array
      */
     public $whereBinds = array();
+    /**
+     * Where builder
+     *
+     * @var \SlaxWeb\BaseModel\Where\Builder
+     */
+    public $wBuild = null;
 
     /*************
      * Callbacks *
@@ -198,6 +205,7 @@ class Model extends \CI_Model
         $this->load->helper("inflector");
         $this->table = $table;
         $this->_setTable();
+        $this->wBuild = new B();
     }
 
     /**
@@ -226,13 +234,23 @@ class Model extends \CI_Model
         $this->_where = array();
         $this->_withDeleted();
 
+        // DEPRECATED
         $where = $this->_setWhere($where);
+
+        $where .= " {$this->wBuild->toString}";
+
+        // monstrosity...because of deprecated stuff...be sure to remove this in the future
+        if (empty($where) === false) {
+            $where = "WHERE {$where}";
+        }
+
         if (is_array($cols) === true) {
             $cols = implode(",", $cols);
         }
 
         $query = $this->db->query(
-            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}", $this->whereBinds
+            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}",
+            $this->whereBinds
         );
 
         return new Result($query->result_object());
@@ -301,7 +319,15 @@ class Model extends \CI_Model
         $this->_where = array();
         $this->_withDeleted();
 
+        // DEPRECATED
         $where = $this->_setWhere($where);
+
+        $where .= " {$this->wBuild->toString}";
+
+        // monstrosity...because of deprecated stuff...be sure to remove this in the future
+        if (empty($where) === false) {
+            $where = "WHERE {$where}";
+        }
         $updateString = "";
         $binds = array();
         if ($this->validate($data) === false) {
@@ -361,10 +387,19 @@ class Model extends \CI_Model
         if ($this->softDelete === C::DELETEHARD) {
             $this->_where = array();
             $this->_withDeleted();
+            // DEPRECATED
             $this->_setWhere($where);
 
+            $where .= " {$this->wBuild->toString}";
+
+            // monstrosity...because of deprecated stuff...be sure to remove this in the future
+            if (empty($where) === false) {
+                $where = "WHERE {$where}";
+            }
+
             $status = $this->db->query(
-                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}", $this->whereBinds
+                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}",
+                $this->whereBinds
             );
         } else {
             $update = array();
@@ -473,15 +508,20 @@ class Model extends \CI_Model
     {
         if ($this->softDelete !== C::DELETEHARD && $this->_ignoreSoftDelete === false) {
             if ($this->softDelete === C::DELETESOFTMARK) {
-                $this->_where[$this->deleteCol] = false;
+                $this->wBuild->add($this->deleteCol, false);
             } elseif ($this->softDelete === C::DELETESOFTSTATUS) {
-                $this->_where["{$this->statusCol} !="] = $this->deleteStatus;
+                $this->wBuild->add($this->statusCol, $this->deleteStatus, "", "!=");
             }
         }
     }
 
     /**
+     * DEPRECATED
+     *
      * Set the where string, if not set by user, BLACK VOODOO MAGIC
+     *
+     * This is DEPRECATED in favour of the Where\Builder class, that uses
+     * MOAR BLACK VOODOO MAGIC, reffer to documentation on how to use it.
      */
     protected function _setWhere($where)
     {
@@ -503,7 +543,7 @@ class Model extends \CI_Model
             }
         }
 
-        return (empty($where)) ? "" : "WHERE {$where}";
+        return $where;
     }
 
     /**
@@ -558,7 +598,7 @@ class Model extends \CI_Model
         $data = array("cols" => "", "values" => "");
         switch ($this->keyType) {
             case C::PKEYAI:
-            case C::PKEYNONE;
+            case C::PKEYNONE:
                 // no need to do anything, database will handle everything
                 break;
             case C::PKEYUUID:

@@ -55,6 +55,20 @@ class Result
     }
 
     /**
+     * Return current row as string, separated by commas.
+     */
+    public function __toString()
+    {
+        $list = "";
+        foreach ($this->_result as $r) {
+            $r = (array)$r;
+            $list .= reset($r) . ",";
+        }
+        $list = rtrim($list, ",");
+        return $list;
+    }
+
+    /**
      * Move to next result row
      */
     public function next()

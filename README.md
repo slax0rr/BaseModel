@@ -1,6 +1,8 @@
 BaseModel
 =========
 
+[![Build Status](https://travis-ci.org/slax0rr/BaseModel.svg?branch=feature%2FwhereBuilder)](https://travis-ci.org/slax0rr/BaseModel)
+
 Base model for CodeIgniter, helps you with your database operations in the model. it auto guesses the table name from the model class name, saves you the hassle of soft deletes and more. BaseModel is also used by [BaseController](https://github.com/slax0rr/BaseModel).
 
 The idea for the BaseModel came from Jamie Rumbelows [base model](https://github.com/jamierumbelow/codeigniter-base-model), with some additions and changes. At this point I would also like to thank [Marco Monteiro](https://github.com/mpmont) and [Sami Keinänen](https://github.com/skope) for their help.
@@ -27,7 +29,11 @@ Table of contents
 * [Building WHERE statements](https://github.com/slax0rr/BaseModel/blob/develop/README.md#building-where-statements)
   * [Conditional operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#conditional-operators)
   * [Comparison operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#comparison-operators)
+  * [Prefix columns with table names](https://github.com/slax0rr/BaseModel/blob/develop/README.md#prefix-columns-with-table-names)
   * [Grouping WHERE expressions](https://github.com/slax0rr/BaseModel/blob/develop/README.md#grouping-where-expressions)
+  * [DEPRECATED - Conditional operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deprecated---conditional-operators)
+  * [DEPRECATED - Comparison operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deprecated---comparison-operators)
+  * [DEPRECATED - Grouping WHERE expressions](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deprecated---grouping-where-expressions)
 * [SQL clauses](https://github.com/slax0rr/BaseModel/blob/develop/README.md#sql-clauses)
   * [GROUP BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#group-by)
   * [ORDER BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#order-by)
@@ -72,6 +78,8 @@ The BaseModel is meant to be extended by your models, so, instead of extending f
 class Some_model extend \SlaxWeb\BaseModel\Model
 ```
 With this, your BaseModel is ready to use.
+
+As an alternative, you can also extend from *MY_Model* and have MY_Model extending BaseModel.
 
 Properties
 ==========
@@ -181,10 +189,70 @@ For deletion you once again have two methods, **delete** and **deleteBy**, and o
 Building WHERE statements
 =========================
 
-BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE \`column1\` = 'value' AND \`column2\` = 'value'*.
+BaseModel provides a WHERE builder class, where you can easily build your own where statements.
+
+The BaseModel provides this builder in its own property **wBuild**, and is already initiated, so you can go ahead and use it. To add expressions to the WHERE statement, the Builder class provides a **add** method, which accepts various input parameters of which 2 are mandatory.
+
+DEPRECATED - BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE \`column1\` = 'value' AND \`column2\` = 'value'*.
+
+Where expression
+----------------
+
+To add an expression to the WHERE statement, simply call the **add** method of the Builder class with column name and value as input parameters.
+```PHP
+$this->wBuild->add("columnName", "value");
+```
+
+Above example will produce a simple where statement: *\`columnName\` = ?* and put the value of the expression to the *bind* array, which will be auto-bound later to your query.
+
+The **add** method returns the Builder object, so you can link together the method calls, and each subsequent call to **add** method will use the *AND* logical operator between expressions.
+```PHP
+$this->wBuild->add("columnName1", "value1")->add("columnName2", 10);
+```
+
+The above example will produce: *\`columnName1\` = ? AND \`columnName2\` = 10*, notice the second one is not a *question mark*, because it does not need to be bound, and it is safe to simply add the value to the query.
+
+You can also pass an array and the Builder will compose a list of all items separated by commas. If there are more than one items, the comma separated list is encapsulated in parenthesis, if there is more than one item in the array, so this is used for *IN/NOT IN* expressions.
+```PHP
+$this->wBuild->add("columnName", array("value1", "value2", "",  "IN"));
+```
+
+The above example will produce: *\`columnName\` IN (?,?)*, and once again it will add the values to the *bind* array. You may also have noticed that this  example uses more than 2 input parameters, but more on that later.
+
+As well as an array, you can pass in an object, which will be cast to string, and then the whole string is exploded into an array and comma is used as delimiter, so a secure list can be composed in the same way as by the array. This enables you to simply use the Result object of previous queries in the where builder. The Result method *__toString* will compose the list of the first column accross all rows, so in the next example we assume *$this->get(123)*, returns 2 rows with the first column values: *value1* and *value2*.
+```PHP
+$this->wBuild->add("columnName", $this->get(123), "", "NOT IN");
+```
+
+The above example will produce *\`columnName\` IN (?,?)*, with *value1* and *value2* in the *bind* array.
 
 Conditional operators
 ---------------------
+
+To change the conditional operator to anything other than **AND** which is default, simply pass whatever logical operator you want as the third input parameter.
+
+Comparison operators
+--------------------
+
+To change the comparison operator from the defaul **=** pass it to the **add** method as the fourth input parameter.
+
+Prefix columns with table names
+-------------------------------
+
+It could be necesarry, especially in joined queries to prepend some column names with its respective table name, this can be done by passing the name of the table as the fifth parameter.
+```PHP
+$this->wBuild->add("columnName", "value", "", "", "tableName");
+```
+
+The above example will produce: *\`tableName\`.\`columnName\` = ?*.
+
+Grouping WHERE expressions
+--------------------------
+
+To group where expressions you need to tell the where builder where to start the group and where to end it, and you do this by setting the sixth parameter to boolean *true*, and where builder will begin the group there, and when you want to end it, pass boolean *false* as the sixth parameter, and where builder will close the group after that expression.
+
+DEPRECATED - Conditional operators
+----------------------------------
 
 To replace AND with any other conditional operator between two WHERE expressions, you have to prefix your column name in the array key with your desired conditional operator.
 ```PHP
@@ -194,8 +262,8 @@ The above example will produce **WHERE \`column1\` = 'value1' OR \`column2\` = '
 
 **NOTE:** at the moment this works only with *OR*, working on more.
 
-Comparison operators
---------------------
+DEPRECATED - Comparison operators
+---------------------------------
 
 Normally BaseModel uses the *equal* comparison operator between column and value, but should you need any other, you have add it as a suffix to the column name in the where array.
 ```PHP
@@ -203,8 +271,8 @@ $this->getBy(array("column1 <" => 10));
 ```
 The above example will produce **WHERE \`column1\` < 10**.
 
-Grouping WHERE expressions
---------------------------
+DEPRECATED - Grouping WHERE expressions
+---------------------------------------
 
 You can also group sets of expressions as you wish to. To do so, simply add a sub-array with further where expressions in this sub-array.
 ```PHP
