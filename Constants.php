@@ -26,4 +26,11 @@ class Constants
     const PKEYFUNC = 202;
     // No primary key
     const PKEYNONE = 203;
+
+    /**
+     * Join constants
+     */
+    const JOININNER = "INNER";
+    const JOINLEFT = "LEFT OUTTER";
+    const JOINRIGHT = "RIGHT OUTTER";
 }
