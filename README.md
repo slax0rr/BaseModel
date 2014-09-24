@@ -442,6 +442,7 @@ ChangeLog
 * Add validation
 * Add primary key type
 * Add GROUP BY, ORDER BY and LIMIT clauses
+* Add WHERE statement builder
 
 0.2.5
 -----
