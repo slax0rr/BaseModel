@@ -243,33 +243,12 @@ class Model extends \CI_Model
      */
     public function getBy($where, $cols = "*")
     {
-        $this->_where = array();
-        $this->_withDeleted();
-
-        // DEPRECATED
-        $where = $this->_setWhere($where);
-
-        $wBuild = $this->wBuild->toString();
-        if (empty($wBuild) === false) {
-            $where .= " {$wBuild}";
-            unset($wBuild);
-        }
-        $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
-
-        // monstrosity...because of deprecated stuff...be sure to remove this in the future
-        if (empty($where) === false) {
-            $where = "WHERE {$where}";
-        }
-
         if (is_array($cols) === true) {
             $cols = implode(",", $cols);
         }
 
-        $query = $this->db->query(
-            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$this->_join} {$where} {$this->_getClauses()}",
-            $this->whereBinds
-        );
-        $this->_join = "";
+        $sql = "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}`";
+        $query = $this->_runQuery($sql);
 
         return new Result($query->result_object());
     }
@@ -334,23 +313,6 @@ class Model extends \CI_Model
      */
     public function updateBy(array $data, $where)
     {
-        $this->_where = array();
-        $this->_withDeleted();
-
-        // DEPRECATED
-        $where = $this->_setWhere($where);
-
-        $wBuild = $this->wBuild->toString();
-        if (empty($wBuild) === false) {
-            $where .= " {$wBuild}";
-            unset($wBuild);
-        }
-        $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
-
-        // monstrosity...because of deprecated stuff...be sure to remove this in the future
-        if (empty($where) === false) {
-            $where = "WHERE {$where}";
-        }
         $updateString = "";
         $binds = array();
         if ($this->validate($data) === false) {
@@ -364,17 +326,13 @@ class Model extends \CI_Model
             $updateString .= "`{$col}` = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
-        $status = $this->db->query(
-            "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$this->_join} {$where} {$this->_getClauses()}",
-            array_merge($binds, $this->whereBinds)
-        );
+        $sql = "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString}";
+        $status = $this->_runQuery($sql);
 
         if ($status === false) {
             $status = new Error($this->lang->language);
             $status->add("UPDATE_ERROR");
         }
-
-        $this->_join = "";
 
         return $status;
     }
@@ -410,28 +368,8 @@ class Model extends \CI_Model
          * delete some old soft deleted rows, and run the delete statement
          */
         if ($this->softDelete === C::DELETEHARD) {
-            $this->_where = array();
-            $this->_withDeleted();
-            // DEPRECATED
-            $this->_setWhere($where);
-
-            $wBuild = $this->wBuild->toString();
-            if (empty($wBuild) === false) {
-                $where .= " {$wBuild}";
-                unset($wBuild);
-            }
-            $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
-
-            // monstrosity...because of deprecated stuff...be sure to remove this in the future
-            if (empty($where) === false) {
-                $where = "WHERE {$where}";
-            }
-
-            $status = $this->db->query(
-                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$this->_join} {$where} {$this->_getClauses()}",
-                $this->whereBinds
-            );
-            $this->_join = "";
+            $sql = "DELETE FROM `{$this->tablePrefix}{$this->table}`";
+            $status = $this->_runQuery($sql);
         } else {
             $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
@@ -683,14 +621,62 @@ class Model extends \CI_Model
     }
 
     /**
-     * Concatenate clauses in right order and remove their contents
+     * Concatenate clauses in right order
      */
     protected function _getClauses()
     {
         $clauses = "";
         $clauses = "{$this->_groupBy} {$this->_orderBy} {$this->_limit}";
-        $this->_orderBy = "";
-        $this->_limit = "";
         return $clauses;
+    }
+    
+    /**
+     * Run query
+     * 
+     * Assembles the where statement with the help of the WHERE builder
+     * and the now DEPRECATED _setWhere class method for backward
+     * compatibility.
+     * When the where is prepared, it takes the passed in query,
+     * adds the clauses and the prepared WHERE statement,
+     * and runs the query.
+     * After query has run it shuts down the query, unsets the binds,
+     * the joins etc.
+     */
+    protected function _runQuery($sql) 
+    {
+        $this->_withDeleted();
+
+        // DEPRECATED
+        $where = $this->_setWhere($where);
+
+        $wBuild = $this->wBuild->toString();
+        if (empty($wBuild) === false) {
+            $where .= " {$wBuild}";
+            unset($wBuild);
+        }
+        $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
+
+        // monstrosity...because of deprecated stuff...be sure to remove this in the future
+        if (empty($where) === false) {
+            $where = "WHERE {$where}";
+        }
+
+        // run the query
+        $query = $this->db->query(
+            "{$sql} {$this->_join} {$where} {$this->_getClauses()}",
+            $this->whereBinds
+        );
+        
+        if ($query !== false) {
+            // shutdown the query
+            $this->_join = "";
+            $this->_orderBy = "";
+            $this->_groupBy = "";
+            $this->_limit = "";
+            $this->_where = array();
+            $this->whereBinds = array();
+        }
+
+        return $query;
     }
 }
