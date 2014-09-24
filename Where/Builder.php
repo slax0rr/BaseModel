@@ -30,6 +30,9 @@ class Builder
         if ($comparator === "") {
             $comparator = "=";
         }
+        if (is_bool($value)) {
+            $value = ($value === true) ? 1 : 0;
+        }
 
         $expr = new E();
         $expr->column = $column;
