@@ -679,9 +679,10 @@ class Model extends \CI_Model
             $this->_orderBy = "";
             $this->_groupBy = "";
             $this->_limit = "";
-            $this->_where = array();
-            $this->whereBinds = array();
         }
+        $this->_where = array();
+        $this->whereBinds = array();
+        $this->wBuild->clear();
 
         return $query;
     }
