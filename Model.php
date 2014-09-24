@@ -328,6 +328,7 @@ class Model extends \CI_Model
             $updateString .= "`{$col}` = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
+        $this->whereBinds = array_merge($this->whereBinds, $binds);
         $sql = "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString}";
         $status = $this->_runQuery($sql, $where);
 
