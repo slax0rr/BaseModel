@@ -18,7 +18,7 @@ Table of contents
 * [Install](https://github.com/slax0rr/BaseModel/blob/develop/README.md#install)
   * [Use the BaseModel](https://github.com/slax0rr/BaseModel/blob/develop/README.md#use-the-basemodel)
 * [Properties](https://github.com/slax0rr/BaseModel/blob/develop/README.md#properties)
-* [Table names](https://github.com/slax0rr/BaseModel/blob/develop/README.md#table-names)
+* [Table name](https://github.com/slax0rr/BaseModel/blob/develop/README.md#table-name)
   * [Guessing the table name](https://github.com/slax0rr/BaseModel/blob/develop/README.md#guessing-the-table-name)
 * [Config constants](https://github.com/slax0rr/BaseModel/blob/develop/README.md#config-constants)
 * [Database operations](https://github.com/slax0rr/BaseModel/blob/develop/README.md#database-operations)
@@ -76,7 +76,7 @@ Use the BaseModel
 
 The BaseModel is meant to be extended by your models, so, instead of extending from *CI_Model*, extend from **\SlaxWeb\BaseModel\Model**:
 ```PHP
-class Some_model extend \SlaxWeb\BaseModel\Model
+class Some_model extends \SlaxWeb\BaseModel\Model
 ```
 With this, your BaseModel is ready to use.
 
