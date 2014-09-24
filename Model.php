@@ -437,11 +437,17 @@ class Model extends \CI_Model
     {
         $join = C::JOININNER . " JOIN `{$table}` ON ";
         $conditions = count($condition);
+        $count = 0;
         foreach ($condition as $c) {
-            if (isset($c[2])) {
-                $join .= "{$c[3]} ";
+            if ($count > 1) {
+                if (isset($c[2])) {
+                    $join .= "{$c[3]} ";
+                } else {
+                    $join .= "AND ";
+                }
             }
             $join .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.{$c[1]} ";
+            $count++;
         }
         if ($conditions > 1) {
             $join = "({$join}) ";
