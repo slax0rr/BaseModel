@@ -108,6 +108,18 @@ class Model extends \CI_Model
      */
     public $rules = null;
 
+    /********
+     * Join *
+     ********/
+    /**
+     * Join
+     *
+     * This var is cleared after the query has been run
+     *
+     * @var string
+     */
+    protected $_join = "";
+
     /*********
      * Where *
      *********/
@@ -249,9 +261,10 @@ class Model extends \CI_Model
         }
 
         $query = $this->db->query(
-            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}",
+            "SELECT {$cols} FROM `{$this->tablePrefix}{$this->table}` {$this->_join} {$where} {$this->_getClauses()}",
             $this->whereBinds
         );
+        $this->_join = "";
 
         return new Result($query->result_object());
     }
@@ -342,7 +355,7 @@ class Model extends \CI_Model
         }
         $updateString = rtrim($updateString, ", ");
         $status = $this->db->query(
-            "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$where} {$this->_getClauses()}",
+            "UPDATE `{$this->tablePrefix}{$this->table}` SET {$updateString} {$this->_join} {$where} {$this->_getClauses()}",
             array_merge($binds, $this->whereBinds)
         );
 
@@ -350,6 +363,8 @@ class Model extends \CI_Model
             $status = new Error($this->lang->language);
             $status->add("UPDATE_ERROR");
         }
+
+        $this->_join = "";
 
         return $status;
     }
@@ -398,9 +413,10 @@ class Model extends \CI_Model
             }
 
             $status = $this->db->query(
-                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$where} {$this->_getClauses()}",
+                "DELETE FROM `{$this->tablePrefix}{$this->table}` {$this->_join} {$where} {$this->_getClauses()}",
                 $this->whereBinds
             );
+            $this->_join = "";
         } else {
             $update = array();
             if ($this->softDelete === C::DELETESOFTMARK) {
@@ -412,6 +428,28 @@ class Model extends \CI_Model
         }
 
         return $status;
+    }
+
+    /**
+     * Add a join statement to the next query
+     */
+    public function join($table, array $condition, $direction = C::JOININNER)
+    {
+        $join = C::JOININNER . " JOIN `{$table}` ON ";
+        $conditions = count($condition);
+        foreach ($condition as $c) {
+            if (isset($c[2])) {
+                $join .= "{$c[3]} ";
+            }
+            $join .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.{$c[1]} ";
+        }
+        if ($conditions > 1) {
+            $join = "({$join}) ";
+        }
+
+        $this->_join .= $join;
+
+        return $this;
     }
 
     /**********
