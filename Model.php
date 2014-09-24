@@ -249,7 +249,11 @@ class Model extends \CI_Model
         // DEPRECATED
         $where = $this->_setWhere($where);
 
-        $where .= " {$this->wBuild->toString()}";
+        $wBuild = $this->wBuild->toString();
+        if (empty($wBuild) === false) {
+            $where .= " {$wBuild}";
+            unset($wBuild);
+        }
         $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
 
         // monstrosity...because of deprecated stuff...be sure to remove this in the future
@@ -336,7 +340,11 @@ class Model extends \CI_Model
         // DEPRECATED
         $where = $this->_setWhere($where);
 
-        $where .= " {$this->wBuild->toString()}";
+        $wBuild = $this->wBuild->toString();
+        if (empty($wBuild) === false) {
+            $where .= " {$wBuild}";
+            unset($wBuild);
+        }
         $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
 
         // monstrosity...because of deprecated stuff...be sure to remove this in the future
@@ -407,7 +415,11 @@ class Model extends \CI_Model
             // DEPRECATED
             $this->_setWhere($where);
 
-            $where .= " {$this->wBuild->toString()}";
+            $wBuild = $this->wBuild->toString();
+            if (empty($wBuild) === false) {
+                $where .= " {$wBuild}";
+                unset($wBuild);
+            }
             $this->whereBinds = array_merge($this->whereBinds, $this->wBuild->binds);
 
             // monstrosity...because of deprecated stuff...be sure to remove this in the future
