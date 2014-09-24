@@ -26,6 +26,7 @@ Table of contents
   * [Getting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-data)
   * [Updating data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#updating-data)
   * [Deleting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deleting-data)
+* [Joining tables](https://github.com/slax0rr/BaseModel/blob/develop/README.md#joining-tables)
 * [Building WHERE statements](https://github.com/slax0rr/BaseModel/blob/develop/README.md#building-where-statements)
   * [Conditional operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#conditional-operators)
   * [Comparison operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#comparison-operators)
@@ -185,6 +186,19 @@ Deleting data
 -------------
 
 For deletion you once again have two methods, **delete** and **deleteBy**, and once again, you can delete by primary key value, your own where statement, or delete everything. If you are using deletion by status or deleted columns, this method will automatically make an update for you, and mark the row(s) as deleted. For usage examples, refer to (Getting data), because the usage is exactly the same, except the different method names.
+
+Joining tables
+==============
+
+BaseModel also provides a way to join tables. For such, a **join** method is provided, which takes 3 input parameters. First is the table name to be joined, second is an array of join conditions, and third is the type of join, INNER per default. To switch the join type, Constants class provides 3 constants: JOININNER(default), JOINLEFT for left join, JOINRIGHT for right join.
+
+The first parameter is self explainatory, just pass in the name of the table. The second parameter must be a nested array which can have 2 and 3 items in it. The first item is the column from the left table in the join, second item is the column from the right table in the join. The third parameter is the link between multiple join conditions, defaults to AND.
+```PHP
+$this->join("table2", array(array("column1", "column1"), array("column2", "column2", "OR")));
+```
+Above example will produce: *INNER JOIN \`table2\` ON (\`models_table\`.\`column1\` = \`table2\`.\`column1\` OR \`models_table\`.\`column2\` = \`table2\`.\`column2\`)*.
+
+After you have ran the query with the join, the join is reset, and you have to do it again if you want to re-use it.
 
 Building WHERE statements
 =========================
@@ -443,6 +457,7 @@ ChangeLog
 * Add primary key type
 * Add GROUP BY, ORDER BY and LIMIT clauses
 * Add WHERE statement builder
+* Add JOIN statements
 
 0.2.5
 -----
