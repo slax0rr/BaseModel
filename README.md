@@ -75,7 +75,7 @@ Use the BaseModel
 
 The BaseModel is meant to be extended by your models, so, instead of extending from *CI_Model*, extend from **\SlaxWeb\BaseModel\Model**:
 ```PHP
-class Some_model extend \SlaxWeb\BaseModel\Model
+class Some_model extends \SlaxWeb\BaseModel\Model
 ```
 With this, your BaseModel is ready to use.
 
