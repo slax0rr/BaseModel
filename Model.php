@@ -391,25 +391,26 @@ class Model extends \CI_Model
      */
     public function join($table, array $condition, $direction = C::JOININNER)
     {
-        $join = C::JOININNER . " JOIN `{$table}` ON ";
-        $conditions = count($condition);
+        $join = C::JOININNER . " JOIN `{$table}` ON";
+        $conditions = "";
+        $condCount = count($condition);
         $count = 0;
         foreach ($condition as $c) {
-            if ($count > 1) {
+            if ($count > 0) {
                 if (isset($c[2])) {
-                    $join .= "{$c[3]} ";
+                    $conditions .= "{$c[2]} ";
                 } else {
-                    $join .= "AND ";
+                    $conditions .= "AND ";
                 }
             }
-            $join .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.{$c[1]} ";
+            $conditions .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.`{$c[1]}` ";
             $count++;
         }
-        if ($conditions > 1) {
-            $join = "({$join}) ";
+        if ($condCount > 1) {
+            $conditions = "({$conditions})";
         }
 
-        $this->_join .= $join;
+        $this->_join .= "{$join} {$conditions} ";
 
         return $this;
     }
