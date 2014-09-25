@@ -242,11 +242,10 @@ class Model extends \CI_Model
      */
     public function get($id = 0)
     {
-        if ($id === 0) {
-            return $this->getBy(array());
-        } else {
-            return $this->getBy(array($this->primaryKey => $id));
+        if ($id !== 0) {
+            $this->wBuild->add($this->primaryKey, $id);
         }
+        return $this->getBy();
     }
 
     /**
@@ -256,7 +255,7 @@ class Model extends \CI_Model
      * added to the queries WHERE statement, and an array of
      * columns to be selected, or "*" (default) for all columns.
      */
-    public function getBy($where, $cols = "*")
+    public function getBy($where = "", $cols = "*")
     {
         if (is_array($cols) === true) {
             foreach ($cols as &$c) {
@@ -316,12 +315,10 @@ class Model extends \CI_Model
      */
     public function update(array $data, $id = 0)
     {
-        if ($id === 0) {
-            return $this->updateBy($data, array());
-        } else {
-            return $this->updateBy($data, array($this->primaryKey => $id));
+        if ($id !== 0) {
+            $this->wBuild->add($this->primaryKey, $id);
         }
-
+        return $this->updateBy($data);
     }
 
     /**
@@ -332,7 +329,7 @@ class Model extends \CI_Model
      * Appart from the where array, there also must be an update array,
      * keys hold the column names, and values hold the, well, values.
      */
-    public function updateBy(array $data, $where)
+    public function updateBy(array $data, $where = "")
     {
         $updateString = "";
         $binds = array();
@@ -368,11 +365,10 @@ class Model extends \CI_Model
      */
     public function delete($id = 0)
     {
-        if ($id === 0) {
-            return $this->deleteBy(array());
-        } else {
-            return $this->deleteBy(array($this->primaryKey => $id));
+        if ($id !== 0) {
+            $this->wBuild->add($this->primaryKey, $id);
         }
+            return $this->deleteBy();
     }
 
     /**
@@ -384,7 +380,7 @@ class Model extends \CI_Model
      *
      * If soft delete is used, an update is issued, if not, the row is DELETED!
      */
-    public function deleteBy($where)
+    public function deleteBy($where = "")
     {
         $status = false;
         /**
@@ -551,6 +547,9 @@ class Model extends \CI_Model
         // if user has set his own where string, use it.
         if ($this->where !== "") {
             return $this->where;
+        }
+        if ($where === "") {
+            return "";
         }
 
         $this->_where = array_merge($this->_where, $where);
