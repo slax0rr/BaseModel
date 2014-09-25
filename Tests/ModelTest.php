@@ -112,10 +112,25 @@ class ModelTest extends PHPUnit_Framework_TestCase
                 ->mock()
             )
             ->mock();
-        $this->assertFalse($model->getBy(array()));
+        $this->assertFalse($model->getBy());
 
         // test a successful select
-        $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Result", $model->getBy(array()));
+        $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Result", $model->getBy());
+
+        // test selecting a specific primary key value
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("SELECT * FROM `test`  WHERE  `id` = 123   ", array())
+            ->once()
+            ->andReturn(
+                m::mock("query")
+                ->shouldReceive("result_object")
+                ->withNoArgs()
+                ->once()
+                ->andReturn(array())
+                ->mock()
+            )
+            ->mock();
+        $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Result", $model->get(123));
     }
 
     public function testUpdate()
@@ -208,13 +223,13 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->andReturn(false)
             ->mock();
         $model->wBuild->add("col2", "val2");
-        $this->assertFalse($model->getBy(array()));
+        $this->assertFalse($model->getBy());
         $model->wBuild->add("col2", "val2");
-        $this->assertFalse($model->getBy(array()));
+        $this->assertFalse($model->getBy());
         $model->wBuild->add("col2", "val2");
-        $this->assertFalse($model->getBy(array()));
+        $this->assertFalse($model->getBy());
         $model->wBuild->add("col2", "val2");
-        $this->assertFalse($model->getBy(array()));
+        $this->assertFalse($model->getBy());
     }
 
     public function testPredefinedSelectColumns()
@@ -226,7 +241,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->andReturn(false)
             ->mock();
         $model->wBuild->add("col1", "val1");
-        $this->assertFalse($model->getBy(array(), array("col1", "col2")));
+        $this->assertFalse($model->getBy("", array("col1", "col2")));
     }
 
     public function testPostgreDriverEscapes()
@@ -239,7 +254,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->andReturn(false)
             ->mock();
         $model->wBuild->add("col1", "val1");
-        $this->assertFalse($model->getBy(array(), array("col1", "col2")));
+        $this->assertFalse($model->getBy("", array("col1", "col2")));
 
         // tet the insert statement
         $data = array("col1" => "val1");
