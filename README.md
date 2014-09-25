@@ -458,6 +458,7 @@ ChangeLog
 * Add GROUP BY, ORDER BY and LIMIT clauses
 * Add WHERE statement builder
 * Add JOIN statements
+* Add other database driver than mysql(i) capability - EXPERIMENTAL!
 
 0.2.5
 -----
