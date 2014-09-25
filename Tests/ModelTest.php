@@ -240,5 +240,14 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->mock();
         $model->wBuild->add("col1", "val1");
         $this->assertFalse($model->getBy(array(), array("col1", "col2")));
+
+        // tet the insert statement
+        $data = array("col1" => "val1");
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("INSERT INTO \"postgre\" (\"col1\") VALUES (?)", array("val1"))
+            ->once()
+            ->andReturn(true)
+            ->mock();
+        $this->assertTrue($model->insert($data));
     }
 }
