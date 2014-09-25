@@ -183,6 +183,9 @@ class Model extends \CI_Model
      * @var array
      */
     protected $_where = array();
+    /***************
+     * SQL Clauses *
+     ***************/
     /**
      * Group by clause
      *
@@ -201,6 +204,15 @@ class Model extends \CI_Model
      * @var string
      */
     protected $_limit = "";
+    /************
+     * Database *
+     ************/
+    /**
+     * Driver
+     *
+     * @var string
+     */
+    protected $_dbDriver = "";
 
     /***********
      * Methods *
@@ -218,6 +230,9 @@ class Model extends \CI_Model
         $this->table = $table;
         $this->_setTable();
         $this->wBuild = new B();
+
+        // get the database driver
+        $this->_dbDriver = $this->db->dbdriver;
     }
 
     /**
@@ -671,11 +686,15 @@ class Model extends \CI_Model
             $where = "WHERE {$where}";
         }
 
+        // prepare the query
+        $sql = "{$sql} {$this->_join} {$where} {$this->_getClauses()}";
+
+        if ($this->_dbDriver !== "mysql" && $this->_dbDriver !== "mysqli") {
+            $sql = str_replace("`", "\"", $sql);
+        }
+
         // run the query
-        $query = $this->db->query(
-            "{$sql} {$this->_join} {$where} {$this->_getClauses()}",
-            $this->whereBinds
-        );
+        $query = $this->db->query($sql, $this->whereBinds);
         
         if ($query !== false) {
             // shutdown the query
