@@ -244,6 +244,10 @@ class Model extends \CI_Model
     public function getBy($where, $cols = "*")
     {
         if (is_array($cols) === true) {
+            foreach ($cols as &$c) {
+                $c = "`{$c}`";
+            }
+            unset($c);
             $cols = implode(",", $cols);
         }
 
