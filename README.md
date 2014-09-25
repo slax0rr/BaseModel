@@ -9,7 +9,7 @@ The idea for the BaseModel came from Jamie Rumbelows [base model](https://github
 
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseModel/issues).
 
-This is still in development phase, but is available for public as early-beta. Please use with caution, I can not guarantee that something will not change along the way. It has only been tested with mySQL, and at the time will probably work only with mySQL.
+This is still in development phase, but is production ready. It has only been tested with mySQL, and at the time will probably work only with mySQL, although other drivers support has been added, but is EXPERIMENTAL.
 
 Table of contents
 =================
