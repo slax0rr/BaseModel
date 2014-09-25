@@ -189,4 +189,43 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model->wBuild->add("newCol1", "newVal1");
         $this->assertFalse($model->getBy(array("oldCol1" => "oldVal1")));
     }
+
+    public function testMultipleSelects()
+    {
+        $model = new Test_model();
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("SELECT * FROM `test`  WHERE `col1` = ?    ", array("val1"))
+            ->once()
+            ->andReturn(false)
+            ->mock();
+        $this->assertFalse($model->getBy(array("col1" => "val1")));
+        $this->assertFalse($model->getBy(array("col1" => "val1")));
+        $this->assertFalse($model->getBy(array("col1" => "val1")));
+        $this->assertFalse($model->getBy(array("col1" => "val1")));
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("SELECT * FROM `test`  WHERE  `col2` = ?   ", array("val2"))
+            ->once()
+            ->andReturn(false)
+            ->mock();
+        $model->wBuild->add("col2", "val2");
+        $this->assertFalse($model->getBy(array()));
+        $model->wBuild->add("col2", "val2");
+        $this->assertFalse($model->getBy(array()));
+        $model->wBuild->add("col2", "val2");
+        $this->assertFalse($model->getBy(array()));
+        $model->wBuild->add("col2", "val2");
+        $this->assertFalse($model->getBy(array()));
+    }
+
+    public function testPredefinedSelectColumns()
+    {
+        $model = new Test_model();
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("SELECT `col1`,`col2` FROM `test`  WHERE  `col1` = ?   ", array("val1"))
+            ->once()
+            ->andReturn(false)
+            ->mock();
+        $model->wBuild->add("col1", "val1");
+        $this->assertFalse($model->getBy(array(), array("col1", "col2")));
+    }
 }
