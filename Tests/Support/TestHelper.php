@@ -7,6 +7,7 @@
 require_once "Tests/Support/Models/Test_model.php";
 require_once "Tests/Support/Models/SoftMark_model.php";
 require_once "Tests/Support/Models/SoftCol_model.php";
+require_once "Tests/Support/Models/Postgre_model.php";
 
 /**
  * CodeIgniter Model mock class
@@ -18,6 +19,7 @@ class CI_Model
     public function __construct()
     {
         $this->load = new CI_Loader();
+        $this->db = new CI_Database();
     }
 }
 
@@ -30,6 +32,16 @@ class CI_Loader
     {
         return true;
     }
+}
+
+/**
+ * CodeIgniter Database mock class
+ *
+ * Used only for the db driver in BaseModels constructor, later mockery is used.
+ */
+class CI_Database
+{
+    public $dbdriver = "mysqli";
 }
 
 function plural($input)

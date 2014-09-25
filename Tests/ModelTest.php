@@ -228,4 +228,17 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model->wBuild->add("col1", "val1");
         $this->assertFalse($model->getBy(array(), array("col1", "col2")));
     }
+
+    public function testPostgreDriverEscapes()
+    {
+        $model = new Postgre_model();
+        $model->setDriver();
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("SELECT \"col1\",\"col2\" FROM \"postgre\"  WHERE  \"col1\" = ?   ", array("val1"))
+            ->once()
+            ->andReturn(false)
+            ->mock();
+        $model->wBuild->add("col1", "val1");
+        $this->assertFalse($model->getBy(array(), array("col1", "col2")));
+    }
 }
