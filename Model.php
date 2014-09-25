@@ -297,7 +297,9 @@ class Model extends \CI_Model
         $insert["cols"] = rtrim($insert["cols"], ",");
         $insert["values"] = rtrim($insert["values"], ",");
         $status = $this->db->query(
-            "INSERT INTO `{$this->tablePrefix}{$this->table}` ({$insert["cols"]}) VALUES ({$insert["values"]})",
+            $this->_fixQueryEscapes(
+                "INSERT INTO `{$this->tablePrefix}{$this->table}` ({$insert["cols"]}) VALUES ({$insert["values"]})"
+            ),
             $binds
         );
         if ($status === false) {
@@ -689,12 +691,8 @@ class Model extends \CI_Model
         // prepare the query
         $sql = "{$sql} {$this->_join} {$where} {$this->_getClauses()}";
 
-        if ($this->_dbDriver !== "mysql" && $this->_dbDriver !== "mysqli") {
-            $sql = str_replace("`", "\"", $sql);
-        }
-
         // run the query
-        $query = $this->db->query($sql, $this->whereBinds);
+        $query = $this->db->query($this->_fixQueryEscapes($sql), $this->whereBinds);
         
         if ($query !== false) {
             // shutdown the query
@@ -708,5 +706,17 @@ class Model extends \CI_Model
         $this->wBuild->clear();
 
         return $query;
+    }
+
+    /**
+     * mySQL requers backtics as escapes, normal databases require double quotes.
+     * This method handles the replace of those escapes.
+     */
+    protected function _fixQueryEscapes($sql)
+    {
+        if ($this->_dbDriver !== "mysql" && $this->_dbDriver !== "mysqli") {
+            $sql = str_replace("`", "\"", $sql);
+        }
+        return $sql;
     }
 }
