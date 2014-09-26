@@ -247,6 +247,13 @@ $this->wBuild->add("columnName", $this->get(123), "", "NOT IN");
 
 The above example will produce *\`columnName\` IN (?,?)*, with *value1* and *value2* in the *bind* array.
 
+To use a completely custom where statement, you can pass it into the *where* method as an array, containing the where statement as first element and second the binds for your statement.
+```PHP
+$this->where(array("columnName1 = ?", array("value1")))->get();
+```
+
+If you have no parameters for binding, just pass the where statement string in the array.
+
 Conditional operators
 ---------------------
 
