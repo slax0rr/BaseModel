@@ -207,6 +207,8 @@ BaseModel provides a WHERE builder class, where you can easily build your own wh
 
 The BaseModel provides this builder in its own property **wBuild**, and is already initiated, so you can go ahead and use it. To add expressions to the WHERE statement, the Builder class provides a **add** method, which accepts various input parameters of which 2 are mandatory.
 
+In addition to the where builder being available through the **wBuild** property, you can also use the **where** method of the BaseModel, which returns the object of it self back, so you can also link together multiple where expressions as well as link further into a query.
+
 DEPRECATED - BaseModel provides some variations in building your WHERE statement from an array, so you can do more complex WHERE statements than just normal *WHERE \`column1\` = 'value' AND \`column2\` = 'value'*.
 
 Where expression
@@ -218,6 +220,11 @@ $this->wBuild->add("columnName", "value");
 ```
 
 Above example will produce a simple where statement: *\`columnName\` = ?* and put the value of the expression to the *bind* array, which will be auto-bound later to your query.
+
+The same thing with the *where* method.
+```PHP
+$this->where("columnName1", "value")->get();
+```
 
 The **add** method returns the Builder object, so you can link together the method calls, and each subsequent call to **add** method will use the *AND* logical operator between expressions.
 ```PHP
