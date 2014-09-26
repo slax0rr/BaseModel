@@ -411,7 +411,15 @@ class Model extends \CI_Model
      */
     public function where()
     {
-        call_user_func_array(array($this->wBuild, "add"), func_get_args());
+        $args = func_get_args();
+        if (is_array($args[0]) === true) {
+            $this->where = $args[0][0];
+            if (isset($args[0][1])) {
+                $this->whereBinds = $args[0][1];
+            }
+        } else {
+            call_user_func_array(array($this->wBuild, "add"), $args);
+        }
         return $this;
     }
 
