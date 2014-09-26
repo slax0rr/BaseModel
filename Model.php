@@ -404,6 +404,18 @@ class Model extends \CI_Model
     }
 
     /**
+     * Where builder *add* method alias
+     *
+     * So you can directly add where items, without the need of calling
+     * a different class.
+     */
+    public function where()
+    {
+        call_user_func_array(array($this->wBuild, "add"), func_get_args());
+        return $this;
+    }
+
+    /**
      * Add a join statement to the next query
      */
     public function join($table, array $condition, $direction = C::JOININNER)
