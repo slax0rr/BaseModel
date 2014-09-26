@@ -16,11 +16,6 @@
         "phpunit/phpunit": "~4.2",
         "mockery/mockery": "~0.9"
     },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "0.3.x-dev"
-        }
-    },
 	"autoload":	{
 		"psr-0": {
 			"SlaxWeb\\BaseModel": ""
