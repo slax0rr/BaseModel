@@ -202,6 +202,14 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->andReturn(false)
             ->mock();
         $this->assertFalse($model->where("col1", "val1")->getBy());
+
+
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("SELECT * FROM `test`  WHERE col1 = ?   ", array("val1"))
+            ->once()
+            ->andReturn(false)
+            ->mock();
+        $this->assertFalse($model->where(array("col1 = ?", array("val1")))->getBy());
     }
 
     public function testCombinedWhereBuild()
