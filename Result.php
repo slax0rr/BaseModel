@@ -20,7 +20,7 @@ class Result
      *
      * @var int
      */
-    protected $_currRow = 0;
+    protected $_currRow = -1;
     /**
      * Rows
      *
@@ -37,9 +37,6 @@ class Result
     {
         $this->_result = $result;
         $this->_rows = count($this->_result);
-        if ($this->_rows > 0) {
-            $this->_resultRow = $this->_result[0];
-        }
     }
 
     /**
@@ -47,6 +44,9 @@ class Result
      */
     public function __get($param)
     {
+        if ($this->_resultRow === null) {
+            $this->next();
+        }
         if (isset($this->_resultRow->{$param}) === true) {
             return $this->_resultRow->{$param};
         } else {
@@ -55,12 +55,29 @@ class Result
     }
 
     /**
+     * Return current row as string, separated by commas.
+     */
+    public function __toString()
+    {
+        $list = "";
+        foreach ($this->_result as $r) {
+            $r = (array)$r;
+            $list .= reset($r) . ",";
+        }
+        $list = rtrim($list, ",");
+        return $list;
+    }
+
+    /**
      * Move to next result row
      */
     public function next()
     {
-        $this->_resultRow = $this->_result[$this->_currRow++];
-        return $this;
+        $currRow = ++$this->_currRow;
+        if ($this->_setRow($currRow) === true) {
+            return $this;
+        }
+        return false;
     }
 
     /**
@@ -68,8 +85,11 @@ class Result
      */
     public function prev()
     {
-        $this->_resultRow = $this->_result[$this->_currRow--];
-        return $this;
+        $currRow = --$this->_currRow;
+        if ($this->_setRow($currRow) === true) {
+            return $this;
+        }
+        return false;
     }
 
     /**
@@ -93,5 +113,34 @@ class Result
     public function rowCount()
     {
         return $this->_rows;
+    }
+
+    /**
+     * Get all rows
+     */
+    public function getResult()
+    {
+        return $this->_result;
+    }
+
+    /**
+     * Return row as array
+     */
+    public function asArray()
+    {
+        return (array)$this->_resultRow;
+    }
+
+    /**
+     * Set the result row
+     */
+    protected function _setRow($row)
+    {
+        if (isset($this->_result[$row])) {
+            $this->_resultRow = $this->_result[$row];
+            return true;
+        } else {
+            return false;
+        }
     }
 }
