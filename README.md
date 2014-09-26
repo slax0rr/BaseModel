@@ -13,48 +13,48 @@ This is still in development phase, but is production ready. It has only been te
 
 Table of contents
 =================
-* [BaseModel](https://github.com/slax0rr/BaseModel/blob/develop/README.md#basemodel)
-* [Table of contents](https://github.com/slax0rr/BaseModel/blob/develop/README.md#table-of-contents)
-* [Install](https://github.com/slax0rr/BaseModel/blob/develop/README.md#install)
-  * [Use the BaseModel](https://github.com/slax0rr/BaseModel/blob/develop/README.md#use-the-basemodel)
-* [Properties](https://github.com/slax0rr/BaseModel/blob/develop/README.md#properties)
-* [Table name](https://github.com/slax0rr/BaseModel/blob/develop/README.md#table-name)
-  * [Guessing the table name](https://github.com/slax0rr/BaseModel/blob/develop/README.md#guessing-the-table-name)
-* [Config constants](https://github.com/slax0rr/BaseModel/blob/develop/README.md#config-constants)
-* [Database operations](https://github.com/slax0rr/BaseModel/blob/develop/README.md#database-operations)
-  * [Inserting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#inserting-data)
-  * [Getting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-data)
-  * [Updating data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#updating-data)
-  * [Deleting data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deleting-data)
-* [Joining tables](https://github.com/slax0rr/BaseModel/blob/develop/README.md#joining-tables)
-* [Building WHERE statements](https://github.com/slax0rr/BaseModel/blob/develop/README.md#building-where-statements)
-  * [Conditional operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#conditional-operators)
-  * [Comparison operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#comparison-operators)
-  * [Prefix columns with table names](https://github.com/slax0rr/BaseModel/blob/develop/README.md#prefix-columns-with-table-names)
-  * [Grouping WHERE expressions](https://github.com/slax0rr/BaseModel/blob/develop/README.md#grouping-where-expressions)
-  * [DEPRECATED - Conditional operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deprecated---conditional-operators)
-  * [DEPRECATED - Comparison operators](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deprecated---comparison-operators)
-  * [DEPRECATED - Grouping WHERE expressions](https://github.com/slax0rr/BaseModel/blob/develop/README.md#deprecated---grouping-where-expressions)
-* [SQL clauses](https://github.com/slax0rr/BaseModel/blob/develop/README.md#sql-clauses)
-  * [GROUP BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#group-by)
-  * [ORDER BY](https://github.com/slax0rr/BaseModel/blob/develop/README.md#order-by)
-  * [LIMIT](https://github.com/slax0rr/BaseModel/blob/develop/README.md#limit)
-* [Validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#validation)
-  * [Run validation manually](https://github.com/slax0rr/BaseModel/blob/develop/README.md#run-validation-manually)
-  * [Skipping validation](https://github.com/slax0rr/BaseModel/blob/develop/README.md#skipping-validation)
-* [Queries on soft deleted rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#queries-on-soft-deleted-rows)
-* [Results](https://github.com/slax0rr/BaseModel/blob/develop/README.md#results)
-  * [Getting column data](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-column-data)
-  * [Number of rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#number-of-rows)
-  * [Get all rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#get-all-rows)
-  * [Traversing through rows](https://github.com/slax0rr/BaseModel/blob/develop/README.md#traversing-through-rows)
-* [Errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#errors)
-  * [Initialization of the Error class](https://github.com/slax0rr/BaseModel/blob/develop/README.md#initialization-of-the-error-class)
-  * [Add an error](https://github.com/slax0rr/BaseModel/blob/develop/README.md#add-an-error)
-  * [Has errors and count errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#has-errors-and-count-errors)
-  * [Getting errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#getting-errors)
-  * [Traversing through errors](https://github.com/slax0rr/BaseModel/blob/develop/README.md#traversing-through-errors)
-* [ChangeLog](https://github.com/slax0rr/BaseModel/blob/develop/README.md#changelog)
+* [BaseModel](https://github.com/slax0rr/BaseModel/blob/master/README.md#basemodel)
+* [Table of contents](https://github.com/slax0rr/BaseModel/blob/master/README.md#table-of-contents)
+* [Install](https://github.com/slax0rr/BaseModel/blob/master/README.md#install)
+  * [Use the BaseModel](https://github.com/slax0rr/BaseModel/blob/master/README.md#use-the-basemodel)
+* [Properties](https://github.com/slax0rr/BaseModel/blob/master/README.md#properties)
+* [Table name](https://github.com/slax0rr/BaseModel/blob/master/README.md#table-name)
+  * [Guessing the table name](https://github.com/slax0rr/BaseModel/blob/master/README.md#guessing-the-table-name)
+* [Config constants](https://github.com/slax0rr/BaseModel/blob/master/README.md#config-constants)
+* [Database operations](https://github.com/slax0rr/BaseModel/blob/master/README.md#database-operations)
+  * [Inserting data](https://github.com/slax0rr/BaseModel/blob/master/README.md#inserting-data)
+  * [Getting data](https://github.com/slax0rr/BaseModel/blob/master/README.md#getting-data)
+  * [Updating data](https://github.com/slax0rr/BaseModel/blob/master/README.md#updating-data)
+  * [Deleting data](https://github.com/slax0rr/BaseModel/blob/master/README.md#deleting-data)
+* [Joining tables](https://github.com/slax0rr/BaseModel/blob/master/README.md#joining-tables)
+* [Building WHERE statements](https://github.com/slax0rr/BaseModel/blob/master/README.md#building-where-statements)
+  * [Conditional operators](https://github.com/slax0rr/BaseModel/blob/master/README.md#conditional-operators)
+  * [Comparison operators](https://github.com/slax0rr/BaseModel/blob/master/README.md#comparison-operators)
+  * [Prefix columns with table names](https://github.com/slax0rr/BaseModel/blob/master/README.md#prefix-columns-with-table-names)
+  * [Grouping WHERE expressions](https://github.com/slax0rr/BaseModel/blob/master/README.md#grouping-where-expressions)
+  * [DEPRECATED - Conditional operators](https://github.com/slax0rr/BaseModel/blob/master/README.md#deprecated---conditional-operators)
+  * [DEPRECATED - Comparison operators](https://github.com/slax0rr/BaseModel/blob/master/README.md#deprecated---comparison-operators)
+  * [DEPRECATED - Grouping WHERE expressions](https://github.com/slax0rr/BaseModel/blob/master/README.md#deprecated---grouping-where-expressions)
+* [SQL clauses](https://github.com/slax0rr/BaseModel/blob/master/README.md#sql-clauses)
+  * [GROUP BY](https://github.com/slax0rr/BaseModel/blob/master/README.md#group-by)
+  * [ORDER BY](https://github.com/slax0rr/BaseModel/blob/master/README.md#order-by)
+  * [LIMIT](https://github.com/slax0rr/BaseModel/blob/master/README.md#limit)
+* [Validation](https://github.com/slax0rr/BaseModel/blob/master/README.md#validation)
+  * [Run validation manually](https://github.com/slax0rr/BaseModel/blob/master/README.md#run-validation-manually)
+  * [Skipping validation](https://github.com/slax0rr/BaseModel/blob/master/README.md#skipping-validation)
+* [Queries on soft deleted rows](https://github.com/slax0rr/BaseModel/blob/master/README.md#queries-on-soft-deleted-rows)
+* [Results](https://github.com/slax0rr/BaseModel/blob/master/README.md#results)
+  * [Getting column data](https://github.com/slax0rr/BaseModel/blob/master/README.md#getting-column-data)
+  * [Number of rows](https://github.com/slax0rr/BaseModel/blob/master/README.md#number-of-rows)
+  * [Get all rows](https://github.com/slax0rr/BaseModel/blob/master/README.md#get-all-rows)
+  * [Traversing through rows](https://github.com/slax0rr/BaseModel/blob/master/README.md#traversing-through-rows)
+* [Errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#errors)
+  * [Initialization of the Error class](https://github.com/slax0rr/BaseModel/blob/master/README.md#initialization-of-the-error-class)
+  * [Add an error](https://github.com/slax0rr/BaseModel/blob/master/README.md#add-an-error)
+  * [Has errors and count errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#has-errors-and-count-errors)
+  * [Getting errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#getting-errors)
+  * [Traversing through errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#traversing-through-errors)
+* [ChangeLog](https://github.com/slax0rr/BaseModel/blob/master/README.md#changelog)
 
 Install
 =======
@@ -463,8 +463,8 @@ The same as the Result class, Error class provides a **prev** and **next** metho
 ChangeLog
 =========
 
-0.3.0 - development
--------------------
+0.3.0
+-----
 
 * Add Error class
 * Add validation
@@ -476,18 +476,22 @@ ChangeLog
 
 0.2.5
 -----
+
 * Reset the where array between queries
 
 0.2.4
 -----
+
 * Remove WHERE keyword from query when there is no WHERE statement
 
 0.2.3
 -----
+
 * With deleted where statement was mistakingly removed
 
 0.2.2
 -----
+
 * Add backtics to column names
 
 0.2.1
