@@ -193,6 +193,17 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($model->deleteBy(array()));
     }
 
+    public function testWhereBuild()
+    {
+        $model = new Test_model();
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("SELECT * FROM `test`  WHERE  `col1` = ?   ", array("val1"))
+            ->once()
+            ->andReturn(false)
+            ->mock();
+        $this->assertFalse($model->where("col1", "val1")->getBy());
+    }
+
     public function testCombinedWhereBuild()
     {
         $model = new Test_model();
