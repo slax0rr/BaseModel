@@ -64,7 +64,7 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basemodel": "0.3.*@dev"
+    "slaxweb/ci-basemodel": "~0.3"
   }
 }
 ```
