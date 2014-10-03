@@ -64,7 +64,7 @@ Simply create composer.json file in your project root:
 ```
 {
   "require": {
-    "slaxweb/ci-basemodel": "0.3.*@dev"
+    "slaxweb/ci-basemodel": "~0.3"
   }
 }
 ```
@@ -462,6 +462,11 @@ The same as the Result class, Error class provides a **prev** and **next** metho
 
 ChangeLog
 =========
+
+0.3.1
+-----
+
+* Fix custom where string parsing bug
 
 0.3.0
 -----
