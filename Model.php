@@ -568,8 +568,8 @@ class Model extends \CI_Model
         if ($this->where !== "") {
             return $this->where;
         }
-        if ($where === "") {
-            return "";
+        if (is_string($where)) {
+            return $where;
         }
 
         $this->_where = array_merge($this->_where, $where);
