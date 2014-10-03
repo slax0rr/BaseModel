@@ -463,6 +463,11 @@ The same as the Result class, Error class provides a **prev** and **next** metho
 ChangeLog
 =========
 
+0.3.1
+-----
+
+* Fix custom where string parsing bug
+
 0.3.0
 -----
 
