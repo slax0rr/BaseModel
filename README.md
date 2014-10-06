@@ -463,6 +463,11 @@ The same as the Result class, Error class provides a **prev** and **next** metho
 ChangeLog
 =========
 
+0.3.2
+-----
+
+* Fix issue of being unable to specify specific table for JOIN statements
+
 0.3.1
 -----
 
