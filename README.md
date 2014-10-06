@@ -5,8 +5,7 @@ BaseModel
 
 Base model for CodeIgniter, helps you with your database operations in the model. it auto guesses the table name from the model class name, saves you the hassle of soft deletes and more. BaseModel is also used by [BaseController](https://github.com/slax0rr/BaseModel).
 
-The idea for the BaseModel came from Jamie Rumbelows [base model](https://github.com/jamierumbelow/codeigniter-base-model), with some additions and changes. At this point I would also like to thank [Marco Monteiro](https://github.com/mpmont) and [Sami Keinänen](https://github.com/skope) for their help.
-
+The idea for the BaseModel came from Jamie Rumbelows [base model](https://github.com/jamierumbelow/codeigniter-base-model), with some additions and changes.
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseModel/issues).
 
 This is still in development phase, but is production ready. It has only been tested with mySQL, and at the time will probably work only with mySQL, although other drivers support has been added, but is EXPERIMENTAL.
@@ -54,6 +53,7 @@ Table of contents
   * [Has errors and count errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#has-errors-and-count-errors)
   * [Getting errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#getting-errors)
   * [Traversing through errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#traversing-through-errors)
+* [Thank you!](https://github.com/slax0rr/BaseModel/blob/master/README.md#thank-you)
 * [ChangeLog](https://github.com/slax0rr/BaseModel/blob/master/README.md#changelog)
 
 Install
@@ -490,6 +490,14 @@ Traversing through errors
 -------------------------
 
 The same as the Result class, Error class provides a **prev** and **next** methods, that return false if there is no previous or next errors, or the object to it self for method linking, but it does not provide a method like **row**, except the **errorAt** which returns already the error at the provided index.
+
+Thank you!
+==========
+
+I would like to thank all who contributed to this project, by either ideas, testing, proofreading of documentation and so on:
+* [Marco Monteiro](https://github.com/mpmont)
+* [Sami Keinänen](https://github.com/skope)
+* [Saso Sabotin](https://github.com/sasos90)
 
 ChangeLog
 =========
