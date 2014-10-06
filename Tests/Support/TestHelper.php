@@ -48,3 +48,11 @@ function plural($input)
 {
     return $input;
 }
+
+/**
+ * CodeIgniter Log message method mock
+ */
+function log_message($level, $msg)
+{
+    return true;
+}

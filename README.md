@@ -5,8 +5,7 @@ BaseModel
 
 Base model for CodeIgniter, helps you with your database operations in the model. it auto guesses the table name from the model class name, saves you the hassle of soft deletes and more. BaseModel is also used by [BaseController](https://github.com/slax0rr/BaseModel).
 
-The idea for the BaseModel came from Jamie Rumbelows [base model](https://github.com/jamierumbelow/codeigniter-base-model), with some additions and changes. At this point I would also like to thank [Marco Monteiro](https://github.com/mpmont) and [Sami Keinänen](https://github.com/skope) for their help.
-
+The idea for the BaseModel came from Jamie Rumbelows [base model](https://github.com/jamierumbelow/codeigniter-base-model), with some additions and changes.
 If you run into issues or have questions/ideas, please submit a ticket here on [GitHub](https://github.com/slax0rr/BaseModel/issues).
 
 This is still in development phase, but is production ready. It has only been tested with mySQL, and at the time will probably work only with mySQL, although other drivers support has been added, but is EXPERIMENTAL.
@@ -54,6 +53,7 @@ Table of contents
   * [Has errors and count errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#has-errors-and-count-errors)
   * [Getting errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#getting-errors)
   * [Traversing through errors](https://github.com/slax0rr/BaseModel/blob/master/README.md#traversing-through-errors)
+* [Thank you!](https://github.com/slax0rr/BaseModel/blob/master/README.md#thank-you)
 * [ChangeLog](https://github.com/slax0rr/BaseModel/blob/master/README.md#changelog)
 
 Install
@@ -191,6 +191,37 @@ Joining tables
 ==============
 
 BaseModel also provides a way to join tables. For such, a **join** method is provided, which takes 3 input parameters. First is the table name to be joined, second is an array of join conditions, and third is the type of join, INNER per default. To switch the join type, Constants class provides 3 constants: JOININNER(default), JOINLEFT for left join, JOINRIGHT for right join.
+
+First parameter is against which table you wish to join. The second parameter is the join conditions array and must be a nested array, which can have these options:
+* **leftTable** - left table in condition, if not set, the models table is used
+* **leftColumn** - left column in condition, can not be empty
+* **rightTable** - right table in condition, if not set, the first passed in parameter is used as table name
+* **rightColumn** - right column in condition, can not be empty
+* **logicalOperator** - logical operator between multiple JOIN conditions, if not set, *AND* is used
+```PHP
+$this->join(
+  "table2",
+  array(
+    array(
+      "leftTable"   =>  "customTable",
+      "leftColumn"  =>  "leftCol1",
+      "rightTable"  =>  "rightCustomTable",
+      "rightColumn" =>  "rightCol1",
+    ),
+    array(
+      "leftColumn"      =>  "leftCol2",
+      "rightColumn"     =>  "rightCol2",
+      "logicalOperator" =>  "OR"
+    )
+  )
+);
+```
+
+Above example will produce: *INNER JOIN \`table2\` ON (\`customTable\`.\`leftCol1\` = \`rightCustomTable\`.\`rightCol1\` OR \`models_table\`.\`leftCol2\` = \`table2\`.\`rightCol2\`)*.
+
+**DEPRECATED**
+
+This method below is DEPRECATED and should be avoided.
 
 The first parameter is self explainatory, just pass in the name of the table. The second parameter must be a nested array which can have 2 and 3 items in it. The first item is the column from the left table in the join, second item is the column from the right table in the join. The third parameter is the link between multiple join conditions, defaults to AND.
 ```PHP
@@ -460,8 +491,21 @@ Traversing through errors
 
 The same as the Result class, Error class provides a **prev** and **next** methods, that return false if there is no previous or next errors, or the object to it self for method linking, but it does not provide a method like **row**, except the **errorAt** which returns already the error at the provided index.
 
+Thank you!
+==========
+
+I would like to thank all who contributed to this project, by either ideas, testing, proofreading of documentation and so on:
+* [Marco Monteiro](https://github.com/mpmont)
+* [Sami Keinänen](https://github.com/skope)
+* [Saso Sabotin](https://github.com/sasos90)
+
 ChangeLog
 =========
+
+0.3.2
+-----
+
+* Fix issue of being unable to specify specific table for JOIN statements
 
 0.3.1
 -----

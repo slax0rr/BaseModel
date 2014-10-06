@@ -433,14 +433,21 @@ class Model extends \CI_Model
         $condCount = count($condition);
         $count = 0;
         foreach ($condition as $c) {
-            if ($count > 0) {
-                if (isset($c[2])) {
-                    $conditions .= "{$c[2]} ";
-                } else {
-                    $conditions .= "AND ";
+            if (isset($c[0])) {
+                // support for old way of building joins, but DEPRECATED
+                $this->_deprecatedJoin($table, $c, $count, $conditions);
+            } else {
+                $leftTable = isset($c["leftTable"]) ? $c["leftTable"] : $this->table;
+                $leftColumn = $c["leftColumn"];
+                $rightTable = isset($c["rightTable"]) ? $c["rightTable"] : $table;
+                $rightColumn = $c["rightColumn"];
+                if ($count > 0) {
+                    $conditions .= (isset($c["logicalOperator"]) ? $c["logicalOperator"] : "AND") . " ";
                 }
+                $conditions .=
+                    "`{$this->tablePrefix}{$leftTable}`.`{$leftColumn}`" .
+                    " = `{$this->tablePrefix}{$rightTable}`.`{$rightColumn}` ";
             }
-            $conditions .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.`{$c[1]}` ";
             $count++;
         }
         if ($condCount > 1) {
@@ -737,5 +744,23 @@ class Model extends \CI_Model
             $sql = str_replace("`", "\"", $sql);
         }
         return $sql;
+    }
+
+    /**
+     * Support for old, now, DEPRECATED way of building a where statement.
+     * It is DEPRECATED because it did not support joins between custom tables, but it always forced join on the main
+     * table.
+     */
+    protected function _deprecatedJoin($table, $c, $count, &$conditions)
+    {
+        log_message("debug", "WARNING! Use of deprecated method for JOIN statement building in BaseModel!");
+        if ($count > 0) {
+            if (isset($c[2])) {
+                $conditions .= "{$c[2]} ";
+            } else {
+                $conditions .= "AND ";
+            }
+        }
+        $conditions .= "`{$this->tablePrefix}{$this->table}`.`{$c[0]}` = `{$this->tablePrefix}{$table}`.`{$c[1]}` ";
     }
 }
