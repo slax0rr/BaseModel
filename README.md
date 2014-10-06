@@ -195,7 +195,7 @@ BaseModel also provides a way to join tables. For such, a **join** method is pro
 First parameter is against which table you wish to join. The second parameter is the join conditions array and must be a nested array, which can have these options:
 * **leftTable** - left table in condition, if not set, the models table is used
 * **leftColumn** - left column in condition, can not be empty
-* **rightColumn** - right table in condition, if not set, the first passed in parameter is used as table name
+* **rightTable** - right table in condition, if not set, the first passed in parameter is used as table name
 * **rightColumn** - right column in condition, can not be empty
 * **logicalOperator** - logical operator between multiple JOIN conditions, if not set, *AND* is used
 ```PHP
