@@ -76,6 +76,35 @@ class ModelTest extends PHPUnit_Framework_TestCase
             "AND `test`.`col3` = `table`.`col3` ) ",
             $model->getProtected("_join")
         );
+
+        $model = new Test_model();
+        $model->join(
+            "table",
+            array(
+                array(
+                    "leftTable"     =>  "lefty",
+                    "leftColumn"    =>  "leftCol1",
+                    "rightTable"    =>  "righty",
+                    "rightColumn"   =>  "rightCol1"
+                ),
+                array(
+                    "leftColumn"        =>  "leftCol2",
+                    "rightTable"        =>  "righty",
+                    "rightColumn"       =>  "rightCol2",
+                    "logicalOperator"   =>  "OR"
+                ),
+                array(
+                    "leftTable"         =>  "lefty",
+                    "leftColumn"        =>  "leftCol3",
+                    "rightColumn"       =>  "rightCol3"
+                )
+            )
+        );
+        $this->assertEquals(
+            "INNER JOIN `table` ON (`lefty`.`leftCol1` = `righty`.`rightCol1` OR " .
+            "`test`.`leftCol2` = `righty`.`rightCol2` AND `lefty`.`leftCol3` = `table`.`rightCol3` ) ",
+            $model->getProtected("_join")
+        );
     }
 
     public function testInsert()
