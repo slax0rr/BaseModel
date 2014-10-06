@@ -192,6 +192,37 @@ Joining tables
 
 BaseModel also provides a way to join tables. For such, a **join** method is provided, which takes 3 input parameters. First is the table name to be joined, second is an array of join conditions, and third is the type of join, INNER per default. To switch the join type, Constants class provides 3 constants: JOININNER(default), JOINLEFT for left join, JOINRIGHT for right join.
 
+First parameter is against which table you wish to join. The second parameter is the join conditions array and must be a nested array, which can have these options:
+* **leftTable** - left table in condition, if not set, the models table is used
+* **leftColumn** - left column in condition, can not be empty
+* **rightColumn** - right table in condition, if not set, the first passed in parameter is used as table name
+* **rightColumn** - right column in condition, can not be empty
+* **logicalOperator** - logical operator between multiple JOIN conditions, if not set, *AND* is used
+```PHP
+$this->join(
+  "table2",
+  array(
+    array(
+      "leftTable"   =>  "customTable",
+      "leftColumn"  =>  "leftCol1",
+      "rightTable"  =>  "rightCustomTable",
+      "rightColumn" =>  "rightCol1",
+    ),
+    array(
+      "leftColumn"      =>  "leftCol2",
+      "rightColumn"     =>  "rightCol2",
+      "logicalOperator" =>  "OR"
+    )
+  )
+);
+```
+
+Above example will produce: *INNER JOIN \`table2\` ON (\`customTable\`.\`leftCol1\` = \`rightCustomTable\`.\`rightCol1\` OR \`models_table\`.\`leftCol2\` = \`table2\`.\`rightCol2\`)*.
+
+**DEPRECATED**
+
+This method below is DEPRECATED and should be avoided.
+
 The first parameter is self explainatory, just pass in the name of the table. The second parameter must be a nested array which can have 2 and 3 items in it. The first item is the column from the left table in the join, second item is the column from the right table in the join. The third parameter is the link between multiple join conditions, defaults to AND.
 ```PHP
 $this->join("table2", array(array("column1", "column1"), array("column2", "column2", "OR")));
