@@ -502,6 +502,12 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.3.3
+-----
+
+* Multiple sort directions in ORDER BY statement
+* Proper LIMIT syntax for non-mySQL databases
+
 0.3.2
 -----
 
