@@ -516,12 +516,18 @@ class Model extends \CI_Model
     public function orderBy(array $columns, $direction = "asc")
     {
         $this->_orderBy = "ORDER BY ";
-        foreach ($columns as $c) {
-            $this->_orderBy .= "`{$c}`,";
+        if (isset($columns[0]) === true) {
+            foreach ($columns as $c) {
+                $this->_orderBy .= "`{$c}`,";
+            }
+            $this->_orderBy = rtrim($this->_orderBy, ",");
+            $this->_orderBy .= " {$direction}";
+        } else {
+            foreach ($columns as $column => $sort) {
+                $this->_orderBy .= "`{$column}` {$sort},";
+            }
+            $this->_orderBy = rtrim($this->_orderBy, ",");
         }
-        $this->_orderBy = rtrim($this->_orderBy, ",");
-        $this->_orderBy .= " {$direction}";
-
         return $this;
     }
 
@@ -531,6 +537,9 @@ class Model extends \CI_Model
     public function limit($limit, $start = 0)
     {
         $this->_limit = "LIMIT {$start}, {$limit}";
+        if ($this->_dbDriver !== "mysql" && $this->_dbDriver !== "mysqli") {
+            $this->_limit = "LIMIT {$limit} OFFSET {$start}";
+        }
         return $this;
     }
 

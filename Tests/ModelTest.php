@@ -28,6 +28,11 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model = new Test_model();
         $model->limit(10, 5);
         $this->assertEquals("LIMIT 5, 10", $model->getProtected("_limit"));
+
+        $model = new Postgre_model();
+        $model->setDriver();
+        $model->limit(10, 5);
+        $this->assertEquals("LIMIT 10 OFFSET 5", $model->getProtected("_limit"));
     }
 
     public function testOrderBy()
@@ -37,6 +42,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("ORDER BY `col1`,`col2` asc", $model->getProtected("_orderBy"));
         $model->orderBy(array("col1", "col2"), "desc");
         $this->assertEquals("ORDER BY `col1`,`col2` desc", $model->getProtected("_orderBy"));
+        $model->orderBy(array("col1" => "ASC", "col2" => "DESC"));
+        $this->assertEquals("ORDER BY `col1` ASC,`col2` DESC", $model->getProtected("_orderBy"));
     }
 
     public function testGroupBy()
