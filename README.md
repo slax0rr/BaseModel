@@ -362,6 +362,18 @@ ORDER BY
 
 To add an order by clause to the query set it with the **orderBy** method. It will be used only for the next query. First parameter must be an array, and must contain column names. The second parameter is the direction of order by, default is "ascending". The method returns the object of the model, so you can link together your method calls.
 
+To use multiple sorting directions in the ORDER BY statement, pass the column names as array keys in first parameter, and direction of each column as the array value and omit the second parameter, example:
+```PHP
+$this->orderBy(
+  array(
+    "col1" => "ASC",
+    "col2  => "DESC"
+  )
+);
+```
+
+Above example will produce *ORDER BY `col1` ASC, `col2` DESC*.
+
 LIMIT
 -----
 
