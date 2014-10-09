@@ -31,6 +31,8 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("ORDER BY `col1`,`col2` asc", $model->getProtected("_orderBy"));
         $model->orderBy(array("col1", "col2"), "desc");
         $this->assertEquals("ORDER BY `col1`,`col2` desc", $model->getProtected("_orderBy"));
+        $model->orderBy(array("col1" => "ASC", "col2" => "DESC"));
+        $this->assertEquals("ORDER BY `col1` ASC,`col2` DESC", $model->getProtected("_orderBy"));
     }
 
     public function testGroupBy()
