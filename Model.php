@@ -520,6 +520,9 @@ class Model extends \CI_Model
     public function limit($limit, $start = 0)
     {
         $this->_limit = "LIMIT {$start}, {$limit}";
+        if ($this->_dbDriver !== "mysql" && $this->_dbDriver !== "mysqli") {
+            $this->_limit = "LIMIT {$limit} OFFSET {$start}";
+        }
         return $this;
     }
 
