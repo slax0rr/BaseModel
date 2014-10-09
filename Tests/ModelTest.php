@@ -22,6 +22,11 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model = new Test_model();
         $model->limit(10, 5);
         $this->assertEquals("LIMIT 5, 10", $model->getProtected("_limit"));
+
+        $model = new Postgre_model();
+        $model->setDriver();
+        $model->limit(10, 5);
+        $this->assertEquals("LIMIT 10 OFFSET 5", $model->getProtected("_limit"));
     }
 
     public function testOrderBy()
