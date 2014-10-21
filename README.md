@@ -514,6 +514,11 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.3.4
+-----
+
+* Set data to form validation manually
+
 0.3.3
 -----
 
