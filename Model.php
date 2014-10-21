@@ -538,17 +538,13 @@ class Model extends \CI_Model
         }
 
         if (empty($this->rules) === false) {
-            $oldPost = $_POST;
-            foreach ($data as $key => $value) {
-                $_POST[$key] = $value;
-            }
             if (is_array($this->rules) === true) {
+                $this->form_validation->set_data($data);
                 $this->form_validation->set_rules($this->rules);
                 $status = $this->form_validation->run();
             } else {
                 $status = $this->form_validation->run($this->rules);
             }
-            $_POST = $oldPost;
         }
         return $status;
     }
