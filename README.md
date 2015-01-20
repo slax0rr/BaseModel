@@ -514,6 +514,11 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.3.5
+-----
+
+* Reset form validation before validating
+
 0.3.4
 -----
 
