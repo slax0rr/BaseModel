@@ -35,13 +35,19 @@ class Model extends \CI_Model
      */
     public $tablePrefix = "";
     /**
+     * Columns
+     *
+     * @var array
+     */
+    public $columns = array();
+    /**
      * Primary key
      *
      * Defaults to "id".
      *
      * @var string
      */
-    public $primaryKey = "id";
+    public $primaryKey = "";
     /**
      * Primary key type
      *
@@ -222,13 +228,24 @@ class Model extends \CI_Model
     {
         parent::__construct();
 
+        // run the before init callback if set and exists
         if (method_exists($this, $this->beforeInit) === true) {
             $this->{$this->beforeInit}();
         }
 
+        // load the inflector for pluralizing the model name
         $this->load->helper("inflector");
-        $this->table = $table;
+        // set the passed in table, if it was not set before
+        if ($this->table === "") {
+            $this->table = $table;
+        }
+        // guess the table name
         $this->_setTable();
+        // get the column data
+        $this->columns = $this->db->field_data($this->table);
+        // get the primary key
+        $this->_setKey();
+        // initialize the where builder
         $this->wBuild = new B();
 
         // get the database driver
@@ -675,6 +692,24 @@ class Model extends \CI_Model
     {
         if ($this->table === "") {
             $this->table = plural(preg_replace("/(_m|_model)?$/", "", strtolower(get_class($this))));
+        }
+    }
+
+    /**
+     * Try and find the primary key of the table
+     */
+    protected function _setKey()
+    {
+        // if table doesn't use primary key or is already set, no need guessing it.
+        if ($this->keyType === C::PKEYNONE || empty($this->primaryKey) === false) {
+            return;
+        }
+
+        foreach ($this->columns as $c) {
+            if ($c->primary_key) {
+                $this->primaryKey = $c->name;
+                return;
+            }
         }
     }
 

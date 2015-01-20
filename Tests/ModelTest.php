@@ -11,6 +11,12 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("test", $model->table);
     }
 
+    public function testPrimaryKey()
+    {
+        $model = new Test_model();
+        $this->assertEquals("pk", $model->primaryKey);
+    }
+
     public function testBeforeInitHook()
     {
         $model = new Test_model();
@@ -155,7 +161,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
 
         // test selecting a specific primary key value
         $model->db = m::mock("db")->shouldReceive("query")
-            ->with("SELECT * FROM `test`  WHERE  `id` = 123   ", array())
+            ->with("SELECT * FROM `test`  WHERE  `pk` = 123   ", array())
             ->once()
             ->andReturn(
                 m::mock("query")
