@@ -539,6 +539,7 @@ class Model extends \CI_Model
 
         if (empty($this->rules) === false) {
             if (is_array($this->rules) === true) {
+                $this->form_validation->reset_validation();
                 $this->form_validation->set_data($data);
                 $this->form_validation->set_rules($this->rules);
                 $status = $this->form_validation->run();
