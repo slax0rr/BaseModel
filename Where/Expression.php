@@ -87,6 +87,6 @@ class Expression
         if ($addBinds === true) {
             $this->binds = array_merge($this->binds, $value);
         }
-        return count($value) > 1 ? "(" . $preparedValue . ")" : $preparedValue;
+        return "({$preparedValue})";
     }
 }
