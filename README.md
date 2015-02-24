@@ -514,6 +514,12 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.3.6
+-----
+
+* Always wrap bound list in parenthesis, even if only one value is found in the list
+* Fix minor typo in README
+
 0.3.5
 -----
 
