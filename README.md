@@ -266,7 +266,7 @@ The above example will produce: *\`columnName1\` = ? AND \`columnName2\` = 10*, 
 
 You can also pass an array and the Builder will compose a list of all items separated by commas. If there are more than one items, the comma separated list is encapsulated in parenthesis, if there is more than one item in the array, so this is used for *IN/NOT IN* expressions.
 ```PHP
-$this->wBuild->add("columnName", array("value1", "value2", "",  "IN"));
+$this->wBuild->add("columnName", array("value1", "value2"), "",  "IN");
 ```
 
 The above example will produce: *\`columnName\` IN (?,?)*, and once again it will add the values to the *bind* array. You may also have noticed that this  example uses more than 2 input parameters, but more on that later.
