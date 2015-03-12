@@ -514,6 +514,11 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.4.0
+-----
+
+* Automatically try to guess table primary key column
+
 0.3.6
 -----
 
