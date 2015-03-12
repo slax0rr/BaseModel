@@ -42,6 +42,14 @@ class CI_Loader
 class CI_Database
 {
     public $dbdriver = "mysqli";
+
+    public function field_data($table)
+    {
+        $col = new \stdClass();
+        $col->name = "pk";
+        $col->primary_key = 1;
+        return array($col);
+    }
 }
 
 function plural($input)
