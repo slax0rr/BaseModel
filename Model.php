@@ -577,6 +577,14 @@ class Model extends \CI_Model
         return $status;
     }
 
+    /**
+     * Get last query
+     */
+    public function getLastQuery()
+    {
+        return $this->_query;
+    }
+
     /*********************
      * Protected Methods *
      *********************/
