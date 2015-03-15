@@ -151,6 +151,16 @@ class Model extends \CI_Model
      */
     public $wBuild = null;
 
+    /*********
+     * Query *
+     *********/
+    /**
+     * Last query
+     *
+     * @var string
+     */
+    protected $_query = "";
+
     /*************
      * Callbacks *
      *************/
@@ -756,10 +766,11 @@ class Model extends \CI_Model
         }
 
         // prepare the query
-        $sql = "{$sql} {$this->_join} {$where} {$this->_getClauses()}";
+        $sql = $this->_fixQueryEscapes("{$sql} {$this->_join} {$where} {$this->_getClauses()}");
+        $this->_query = $sql;
 
         // run the query
-        $query = $this->db->query($this->_fixQueryEscapes($sql), $this->whereBinds);
+        $query = $this->db->query($sql, $this->whereBinds);
         
         if ($query !== false) {
             // shutdown the query
