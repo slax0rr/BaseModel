@@ -266,7 +266,7 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model->lang = new \stdClass();
         $model->lang->language = array("error_update_error" => "unit test error");
         $model->db = m::mock("db")->shouldReceive("query")
-            ->with("UPDATE `softmark` SET `deleted` = true  WHERE  `deleted` = 0   ", array())
+            ->with("UPDATE `softmark` SET `deleted` = true  WHERE  `deleted` = false   ", array())
             ->twice()
             ->andReturn(false, true)
             ->shouldReceive("last_query")
