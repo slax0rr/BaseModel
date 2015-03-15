@@ -153,6 +153,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
                 ->andReturn(array())
                 ->mock()
             )
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertFalse($model->getBy());
 
@@ -171,6 +174,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
                 ->andReturn(array())
                 ->mock()
             )
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Result", $model->get(123));
     }
@@ -185,11 +191,34 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("UPDATE `test` SET `col1` = ?     ", array("val1"))
             ->twice()
             ->andReturn(false, true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Error", $model->updateBy(array("col1" => "val1"), array()));
 
         // test a successful update
         $this->assertTrue($model->updateBy(array("col1" => "val1"), array()));
+    }
+
+    public function testUpdateBool()
+    {
+        $model = new Test_model();
+        // test a failed update and that the sql is correctly formed
+        $model->lang = new \stdClass();
+        $model->lang->language = array("error_update_error" => "unit test error");
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("UPDATE `test` SET `col1` = false     ", array())
+            ->twice()
+            ->andReturn(true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
+            ->mock();
+
+        // test a successful update
+        $this->assertTrue($model->updateBy(array("col1" => false), array()));
+        $this->assertEquals("UPDATE `test` SET `col1` = false     ", $model->getQuery());
     }
 
     public function testDelete()
@@ -200,6 +229,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("DELETE FROM `test`  WHERE `col1` = ?    ", array("val1"))
             ->twice()
             ->andReturn(false, true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertFalse($model->deleteBy(array("col1" => "val1")));
 
@@ -211,9 +243,12 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $model->lang = new \stdClass();
         $model->lang->language = array("error_update_error" => "unit test error");
         $model->db = m::mock("db")->shouldReceive("query")
-            ->with("UPDATE `softmark` SET `deleted` = 1  WHERE  `deleted` = 0   ", array())
+            ->with("UPDATE `softmark` SET `deleted` = true  WHERE  `deleted` = 0   ", array())
             ->twice()
             ->andReturn(false, true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Error", $model->deleteBy(array()));
 
@@ -228,6 +263,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("UPDATE `softcol` SET `status` = ?  WHERE  `status` != ?   ", array("deleted", "deleted"))
             ->twice()
             ->andReturn(false, true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Error", $model->deleteBy(array()));
 
@@ -242,6 +280,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("SELECT * FROM `test`  WHERE  `col1` = ?   ", array("val1"))
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertFalse($model->where("col1", "val1")->getBy());
 
@@ -250,6 +291,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("SELECT * FROM `test`  WHERE col1 = ?   ", array("val1"))
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertFalse($model->where(array("col1 = ?", array("val1")))->getBy());
     }
@@ -261,6 +305,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("SELECT * FROM `test`  WHERE `oldCol1` = ? AND `newCol1` = ?   ", array("oldVal1", "newVal1"))
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $model->wBuild->add("newCol1", "newVal1");
         $this->assertFalse($model->getBy(array("oldCol1" => "oldVal1")));
@@ -273,6 +320,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("SELECT * FROM `test`  WHERE `col1` = ?    ", array("val1"))
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertFalse($model->getBy(array("col1" => "val1")));
         $this->assertFalse($model->getBy(array("col1" => "val1")));
@@ -282,6 +332,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("SELECT * FROM `test`  WHERE  `col2` = ?   ", array("val2"))
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $model->wBuild->add("col2", "val2");
         $this->assertFalse($model->getBy());
@@ -300,6 +353,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("SELECT `col1`,`col2` FROM `test`  WHERE  `col1` = ?   ", array("val1"))
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $model->wBuild->add("col1", "val1");
         $this->assertFalse($model->getBy("", array("col1", "col2")));
@@ -313,6 +369,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("SELECT \"col1\",\"col2\" FROM \"postgre\"  WHERE  \"col1\" = ?   ", array("val1"))
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $model->wBuild->add("col1", "val1");
         $this->assertFalse($model->getBy("", array("col1", "col2")));
