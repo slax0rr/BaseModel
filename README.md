@@ -514,6 +514,17 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.4.1
+-----
+
+* Properly handle bool values in queries
+* Properly handle bool values in where expression builder
+
+0.4.0
+-----
+
+* Automatically try to guess table primary key column
+
 0.3.6
 -----
 

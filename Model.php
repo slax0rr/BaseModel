@@ -151,6 +151,28 @@ class Model extends \CI_Model
      */
     public $wBuild = null;
 
+    /*********
+     * Query *
+     *********/
+    /**
+     * Last unbound query
+     *
+     * @var string
+     */
+    protected $_query = "";
+    /**
+     * Last ran query
+     *
+     * @var string
+     */
+    protected $_ranQuery = "";
+    /**
+     * Last where binds
+     *
+     * @var array
+     */
+    protected $_whereBinds = array();
+
     /*************
      * Callbacks *
      *************/
@@ -305,19 +327,23 @@ class Model extends \CI_Model
             return $error;
         }
         foreach ($data as $col => $value) {
-            $binds[] = $value;
-            $value = "?";
+            if (is_string($value)) {
+                $binds[] = $value;
+                $value = "?";
+            } elseif (is_bool($value)) {
+                $value = $value === true ? "true" : "false";
+            }
             $insert["cols"] .= "`{$col}`,";
             $insert["values"] .= "{$value},";
         }
         $insert["cols"] = rtrim($insert["cols"], ",");
         $insert["values"] = rtrim($insert["values"], ",");
-        $status = $this->db->query(
-            $this->_fixQueryEscapes(
-                "INSERT INTO `{$this->tablePrefix}{$this->table}` ({$insert["cols"]}) VALUES ({$insert["values"]})"
-            ),
-            $binds
+        $sql = $this->_fixQueryEscapes(
+            "INSERT INTO `{$this->tablePrefix}{$this->table}` ({$insert["cols"]}) VALUES ({$insert["values"]})"
         );
+        $this->_query = $sql;
+        $status = $this->db->query($sql, $binds);
+        $this->_ranQuery = $this->db->last_query();
         if ($status === false) {
             $status = new Error($this->lang->language);
             $status->add("CREATE_ERROR");
@@ -359,6 +385,8 @@ class Model extends \CI_Model
             if (is_string($value)) {
                 $binds[] = $value;
                 $value = "?";
+            } elseif (is_bool($value)) {
+                $value = $value === true ? "true" : "false";
             }
             $updateString .= "`{$col}` = {$value}, ";
         }
@@ -567,6 +595,30 @@ class Model extends \CI_Model
         return $status;
     }
 
+    /**
+     * Get last query
+     */
+    public function getQuery()
+    {
+        return $this->_query;
+    }
+
+    /**
+     * Get last bound query
+     */
+    public function getBoundQuery()
+    {
+        return $this->_ranQuery;
+    }
+
+    /**
+     * Get last query binds
+     */
+    public function getQueryBinds()
+    {
+        return $this->_whereBinds;
+    }
+
     /*********************
      * Protected Methods *
      *********************/
@@ -756,10 +808,13 @@ class Model extends \CI_Model
         }
 
         // prepare the query
-        $sql = "{$sql} {$this->_join} {$where} {$this->_getClauses()}";
+        $sql = $this->_fixQueryEscapes("{$sql} {$this->_join} {$where} {$this->_getClauses()}");
+        $this->_query = $sql;
+        $this->_whereBinds = $this->whereBinds;
 
         // run the query
-        $query = $this->db->query($this->_fixQueryEscapes($sql), $this->whereBinds);
+        $query = $this->db->query($sql, $this->whereBinds);
+        $this->_ranQuery = $this->db->last_query();
         
         if ($query !== false) {
             // shutdown the query
