@@ -327,19 +327,23 @@ class Model extends \CI_Model
             return $error;
         }
         foreach ($data as $col => $value) {
-            $binds[] = $value;
-            $value = "?";
+            if (is_string($value)) {
+                $binds[] = $value;
+                $value = "?";
+            } elseif (is_bool($value)) {
+                $value = $value === true ? "true" : "false";
+            }
             $insert["cols"] .= "`{$col}`,";
             $insert["values"] .= "{$value},";
         }
         $insert["cols"] = rtrim($insert["cols"], ",");
         $insert["values"] = rtrim($insert["values"], ",");
-        $status = $this->db->query(
-            $this->_fixQueryEscapes(
-                "INSERT INTO `{$this->tablePrefix}{$this->table}` ({$insert["cols"]}) VALUES ({$insert["values"]})"
-            ),
-            $binds
+        $sql = $this->_fixQueryEscapes(
+            "INSERT INTO `{$this->tablePrefix}{$this->table}` ({$insert["cols"]}) VALUES ({$insert["values"]})"
         );
+        $this->_query = $sql;
+        $status = $this->db->query($sql, $binds);
+        $this->_ranQuery = $this->db->last_query();
         if ($status === false) {
             $status = new Error($this->lang->language);
             $status->add("CREATE_ERROR");
@@ -381,8 +385,7 @@ class Model extends \CI_Model
             if (is_string($value)) {
                 $binds[] = $value;
                 $value = "?";
-            }
-            if (is_bool($value)) {
+            } elseif (is_bool($value)) {
                 $value = $value === true ? "true" : "false";
             }
             $updateString .= "`{$col}` = {$value}, ";
