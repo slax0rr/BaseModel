@@ -38,7 +38,7 @@ class WhereBuilderTest extends PHPUnit_Framework_TestCase
     {
         $builder = new \SlaxWeb\BaseModel\Where\Builder();
         $builder->add("columnName", false);
-        $this->assertEquals("`columnName` = 0", $builder->toString());
+        $this->assertEquals("`columnName` = false", $builder->toString());
     }
 
     public function testMultiExpressions()
