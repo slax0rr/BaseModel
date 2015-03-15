@@ -123,6 +123,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->with("INSERT INTO `test` (`col1`) VALUES (?)", array("val1"))
             ->once()
             ->andReturn(true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $this->assertTrue($model->insert($data));
 
@@ -131,10 +134,30 @@ class ModelTest extends PHPUnit_Framework_TestCase
             ->withAnyArgs()
             ->once()
             ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
             ->mock();
         $model->lang = new \stdClass();
         $model->lang->language = array("error_create_error" => "unit test error");
         $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Error", $model->insert($data));
+    }
+
+    public function testInsertBool()
+    {
+        $model = new Test_model();
+        $data = array("col1" => true);
+        // prepare the db->query mock
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("INSERT INTO `test` (`col1`) VALUES (true)", array())
+            ->once()
+            ->andReturn(true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
+            ->mock();
+        $this->assertTrue($model->insert($data));
+        $this->assertEquals("INSERT INTO `test` (`col1`) VALUES (true)", $model->getQuery());
     }
 
     public function testSelect()
@@ -380,6 +403,9 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $data = array("col1" => "val1");
         $model->db = m::mock("db")->shouldReceive("query")
             ->with("INSERT INTO \"postgre\" (\"col1\") VALUES (?)", array("val1"))
+            ->once()
+            ->andReturn(true)
+            ->shouldReceive("last_query")
             ->once()
             ->andReturn(true)
             ->mock();
