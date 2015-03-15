@@ -514,6 +514,11 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.4.2
+-----
+
+* No functionality changes, new tests, and version bump
+
 0.4.1
 -----
 
