@@ -155,11 +155,23 @@ class Model extends \CI_Model
      * Query *
      *********/
     /**
-     * Last query
+     * Last unbound query
      *
      * @var string
      */
     protected $_query = "";
+    /**
+     * Last ran query
+     *
+     * @var string
+     */
+    protected $_ranQuery = "";
+    /**
+     * Last where binds
+     *
+     * @var array
+     */
+    protected $_whereBinds = array();
 
     /*************
      * Callbacks *
@@ -580,9 +592,25 @@ class Model extends \CI_Model
     /**
      * Get last query
      */
-    public function getLastQuery()
+    public function getQuery()
     {
         return $this->_query;
+    }
+
+    /**
+     * Get last bound query
+     */
+    public function getBoundQuery()
+    {
+        return $this->_ranQuery;
+    }
+
+    /**
+     * Get last query binds
+     */
+    public function getQueryBinds()
+    {
+        return $this->_whereBinds;
     }
 
     /*********************
@@ -776,9 +804,11 @@ class Model extends \CI_Model
         // prepare the query
         $sql = $this->_fixQueryEscapes("{$sql} {$this->_join} {$where} {$this->_getClauses()}");
         $this->_query = $sql;
+        $this->_whereBinds = $this->whereBinds;
 
         // run the query
         $query = $this->db->query($sql, $this->whereBinds);
+        $this->_ranQuery = $this->db->last_query();
         
         if ($query !== false) {
             // shutdown the query
