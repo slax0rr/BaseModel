@@ -62,6 +62,11 @@ class Expression
             $this->binds[] = $value;
         }
 
+        // if the value is a bool
+        if (is_bool($value)) {
+            $preparedValue = $value === true ? "true" : "false";
+        }
+
         // if the value is an object
         if (is_object($value)) {
             $stringValue = (string)$value;
