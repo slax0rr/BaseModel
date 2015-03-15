@@ -382,6 +382,9 @@ class Model extends \CI_Model
                 $binds[] = $value;
                 $value = "?";
             }
+            if (is_bool($value)) {
+                $value = $value === true ? "true" : "false";
+            }
             $updateString .= "`{$col}` = {$value}, ";
         }
         $updateString = rtrim($updateString, ", ");
