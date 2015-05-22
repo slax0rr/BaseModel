@@ -1,3 +1,4 @@
 *.swp
+*.session.vim
 vendor/
 composer.lock
