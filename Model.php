@@ -352,6 +352,63 @@ class Model extends \CI_Model
     }
 
     /**
+     * Batch insert
+     *
+     * Insert multiple number of rows at once
+     */
+    public function batchInsert(array $cols, array $data)
+    {
+        $insert = $this->_setPrimaryKey();
+        if ($this->keyType === C::PKEYFUNC) {
+            $cols[] = "{$this->primaryKey}";
+            $pkVal = "{$this->keyValue}";
+        }
+        $sql = "INSERT INTO `{$this->tablePrefix}{$this->table}` (`" . implode("`,`", $cols) . "`) VALUES ";
+
+        $count = 0;
+        $binds = array();
+        foreach ($data as $d) {
+            $insert["values"] = "";
+            if ($this->validate(array_combine($cols, $d)) === false) {
+                $error = new Error($this->lang->language);
+                $error->add("VALIDATION_ERROR");
+                return $error;
+            }
+            foreach ($d as $value) {
+                if (is_string($value)) {
+                    $binds[] = $value;
+                    $value = "?";
+                } elseif (is_bool($value)) {
+                    $value = $value === true ? "true" : "false";
+                }
+                $insert["values"] .= "{$value},";
+            }
+            if ($this->keyType === C::PKEYFUNC && $count !== 0) {
+                $pkVal = call_user_func($this->keyFunc, $this->keyFuncParams);
+            }
+            $count++;
+            if (in_array($this->keyType, [C::PKEYFUNC, C::PKEYUUID])) {
+                $binds[] = $pkVal;
+                $insert["values"] .= "?";
+            } else {
+                $insert["values"] = rtrim($insert["values"], ",");
+            }
+
+            $sql .= "({$insert["values"]}), ";
+        }
+        $sql = rtrim($sql, ", ");
+        $this->_query = $this->_fixQueryEscapes($sql);
+        $status = $this->db->query($sql, $binds);
+        $this->_ranQuery = $this->db->last_query();
+
+        if ($status === false) {
+            $status = new Error($this->lang->language);
+            $status->add("BATCH_CREATE_ERROR");
+        }
+        return $status;
+    }
+
+    /**
      * Update by primary key
      *
      * If ID === 0, all records are updated.
