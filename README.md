@@ -149,6 +149,19 @@ The method will first try to validate data, if you have set the **rules** proper
 
 On error, the method will return an *Error* object, or true on success.
 
+To insert a batch of data, the **batchInsert** method is available,
+which takes two arrays as input. First one being an array of columns,
+and second one being a nested array of row data.
+```PHP
+$this->batchInsert(array("column"), array(array("row1value"), array("row2value")));
+```
+
+Method validates data as it constructs the SQL statement. Any data not
+validating in any row, will terminate the whole insert.
+
+As well as the normal **insert**, it will return an *Error* object on
+error, or true on success.
+
 Getting data
 ------------
 
