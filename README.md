@@ -514,6 +514,11 @@ I would like to thank all who contributed to this project, by either ideas, test
 ChangeLog
 =========
 
+0.5.0 - development
+-------------------
+
+* Batch insert
+
 0.4.2
 -----
 
