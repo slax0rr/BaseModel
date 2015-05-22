@@ -387,7 +387,7 @@ class Model extends \CI_Model
                 $pkVal = call_user_func($this->keyFunc, $this->keyFuncParams);
             }
             $count++;
-            if (in_array($this->keyType, [C::PKEYFUNC, C::PKEYUUID])) {
+            if (in_array($this->keyType, array(C::PKEYFUNC, C::PKEYUUID))) {
                 $binds[] = $pkVal;
                 $insert["values"] .= "?";
             } else {
