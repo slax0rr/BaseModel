@@ -160,6 +160,36 @@ class ModelTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("INSERT INTO `test` (`col1`) VALUES (true)", $model->getQuery());
     }
 
+    public function testBatchInsert()
+    {
+        $model = new Test_model();
+        $cols = array("col1");
+        $vals = array(array("val1"), array("val2"));
+        // prepare the db->query mock
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->with("INSERT INTO `test` (`col1`) VALUES (?), (?)", array("val1", "val2"))
+            ->once()
+            ->andReturn(true)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
+            ->mock();
+        $this->assertTrue($model->batchInsert($cols, $vals));
+
+        // reset query mock for error
+        $model->db = m::mock("db")->shouldReceive("query")
+            ->withAnyArgs()
+            ->once()
+            ->andReturn(false)
+            ->shouldReceive("last_query")
+            ->once()
+            ->andReturn(true)
+            ->mock();
+        $model->lang = new \stdClass();
+        $model->lang->language = array("error_create_error" => "unit test error");
+        $this->assertInstanceOf("\\SlaxWeb\\BaseModel\\Error", $model->batchInsert($cols, $vals));
+    }
+
     public function testSelect()
     {
         $model = new Test_model();
